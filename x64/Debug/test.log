@@ -1,0 +1,6 @@
+﻿  test.cpp
+e:\githubpro\test\test.cpp(405): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
+e:\githubpro\test\test.cpp(405): warning C4312: 'type cast': conversion from 'int' to 'pfun' of greater size
+e:\githubpro\test\test.cpp(407): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
+e:\githubpro\test\test.cpp(407): warning C4312: 'type cast': conversion from 'int' to 'pfun' of greater size
+  test.vcxproj -> E:\GitHubPro\test\x64\Debug\test.exe
