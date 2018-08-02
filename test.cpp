@@ -359,18 +359,33 @@ void g(T && value)
 }
 class A
 {
+public:
 	char x;
-	virtual void foo() { cout << "a: foo" << endl; }
+	int y;
+	virtual void aoo() { cout << "a: foo" << endl; }
 };
 class B:public A
 {
-	virtual void goo() { cout << "b: goo" << endl; }
+public:
+	virtual void boo() { cout << "b: boo" << endl; }
 };
 class C
 {
-	virtual void hoo() { cout << "c: hoo" << endl; }
+public:
+	virtual void coo() { cout << "c: coo" << endl; }
 };
 class D :public A,public C
+{};
+class E :virtual public A
+{
+	int z;
+	virtual void eoo() { cout << "e: eoo" << endl; }
+};
+class F :virtual public A
+{
+	virtual void foo() { cout << "f: foo" << endl; }
+};
+class G:public E, public F
 {};
 typedef void(*pfun)(void);
 using gfun = void(*)(void);
@@ -412,5 +427,19 @@ int main()
 	fun();
 	fun = (pfun)*((int*)(*(int*)(&btest))+1);
 	fun();
+	D dtest;
+	int** pvftbl = (int**)(&dtest);
+	//for (int i = 0; pvftbl[i][0] != NULL; i++)
+	//{
+		for (int j = 0; pvftbl[0][j] != NULL; j++)
+		{
+			fun = pfun(pvftbl[0][j]);
+			fun();
+		}
+	//}
+	dtest.A::x = 'a';
+	E etest;
+	F ftest;
+	G gtest;
 	return 0;
 }
