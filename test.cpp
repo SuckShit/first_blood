@@ -388,7 +388,7 @@ class F :virtual public A
 class G:public E, public F
 {};
 typedef void(*pfun)(void);
-using gfun = void(*)(void);
+using gfun = void(*)(int);
 int main()
 {
 	//myclass_constructor_test mtg;
@@ -444,5 +444,42 @@ int main()
 	E etest;
 	F ftest;
 	G gtest;
+	/*
+	decltype和auto都可以用来推断类型，
+	但是二者有几处明显的差异：
+	1.auto忽略顶层const，decltype保留顶层const；
+	2.对引用操作，auto推断出原有类型，decltype推断出引用；
+	3.对解引用操作，auto推断出原有类型，decltype推断出引用；
+	4.auto推断时会实际执行，decltype不会执行，只做分析。
+	*/
+	const int* const p = &b;
+	decltype(p) whatisthis = &b;
+	cout << typeid(whatisthis).name() << endl;
+	cout << typeid(p).name() << endl;
+	const int* q = &b;
+	cout << typeid(q).name() << endl;
+	int* const qq = &b;
+	cout << typeid(qq).name() << endl;
+	gfun gfunf = NULL;
+	gfunf = [](int x)->void {};
+
+	{
+		int a = 1, b = 1, c = 1;
+
+		auto m1 = [a, &b, &c]() mutable {
+			auto m2 = [a, b, &c]() mutable {
+				std::cout << a << b << c << '\n';
+				a = 4; b = 4; c = 4;
+			};
+			a = 3; b = 3; c = 3;
+			m2();
+		};
+
+		a = 2; b = 2; c = 2;
+
+		m1();                             // 调用 m2() 并打印 123
+		std::cout << a << b << c << '\n'; // 打印 234
+	}
+
 	return 0;
 }
