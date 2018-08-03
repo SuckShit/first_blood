@@ -1,7 +1,0 @@
-﻿  test.cpp
-e:\conquer\github\first_blood\test.cpp(411): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-e:\conquer\github\first_blood\test.cpp(411): warning C4312: 'type cast': conversion from 'int' to 'pfun' of greater size
-e:\conquer\github\first_blood\test.cpp(413): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-e:\conquer\github\first_blood\test.cpp(413): warning C4312: 'type cast': conversion from 'int' to 'pfun' of greater size
-e:\conquer\github\first_blood\test.cpp(421): warning C4312: '<function-style-cast>': conversion from 'int' to 'pfun' of greater size
-  test.vcxproj -> E:\Conquer\github\first_blood\x64\Debug\test.exe

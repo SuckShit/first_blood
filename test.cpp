@@ -417,8 +417,10 @@ int main()
 		mp = NULL;
 		mq = NULL;
 	}
+	cout << "============" << "sizeof A B D" << endl;
 	cout << sizeof(A) << " " << sizeof(B) << " " << sizeof(D) << endl;
-
+	cout << "============" << "sizeof E F" << endl;
+	cout << sizeof(E) << " " << sizeof(F) << endl;
 	A atest;
 	B btest;
 	cout << sizeof(int) << " " << sizeof(int*) << endl;
@@ -427,6 +429,7 @@ int main()
 	fun();
 	fun = (pfun)*((int*)(*(int*)(&btest))+1);
 	fun();
+	cout << (int*)(&btest) << " " << (int*)(&btest) + 1 << endl;
 	D dtest;
 	int** pvftbl = (int**)(&dtest);
 	//for (int i = 0; pvftbl[i][0] != NULL; i++)

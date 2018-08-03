@@ -23,3 +23,5 @@ $RECYCLE.BIN/
 # =========================
 #vs files
 .vs/
+Debug/
+x64/
