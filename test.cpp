@@ -389,6 +389,39 @@ class G:public E, public F
 {};
 typedef void(*pfun)(void);
 using gfun = void(*)(int);
+
+void thread_task(int sec, promise<int> mypromise)
+{
+	this_thread::sleep_for(chrono::seconds(sec));
+	mypromise.set_value(sec);
+}
+
+class test_copyable
+{
+public:
+	test_copyable(int i = 0)
+	{
+		val = i;
+	}
+
+	test_copyable(const test_copyable& other) = delete;
+	test_copyable(test_copyable &&other)
+	{
+		cout << "move constructor" << endl;
+	}
+private:
+	int val;
+};
+void test_fun(test_copyable &&T)//参数类型限定右值 注意与模板的引用坍缩区分
+{
+
+}
+template<class T>
+void test_fun2(T&& t)
+{
+	test_fun(move(t));
+}
+
 int main()
 {
 	//myclass_constructor_test mtg;
@@ -480,6 +513,18 @@ int main()
 		m1();                             // 调用 m2() 并打印 123
 		std::cout << a << b << c << '\n'; // 打印 234
 	}
+
+	test_copyable testa;
+	test_copyable testb(move(testa));
+	test_fun(move(testa));
+	test_fun2(testa);
+	test_fun2(move(testa));
+
+	int value = 0;
+	promise<int> my_promise;
+	future<int> my_future = my_promise.get_future();
+	thread mythread(thread_task, 5, move(my_promise));//如果去掉move my_promise当作左值传入 在模板特化时根据引用折叠变成左值引用 在tuple中构造时出现问题
+	mythread.detach();
 
 	return 0;
 }
