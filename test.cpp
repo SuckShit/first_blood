@@ -421,7 +421,28 @@ void test_fun2(T&& t)
 {
 	test_fun(move(t));
 }
+class TestCopyAndMove
+{
+public:
+	TestCopyAndMove()
+	{
+		cout << "default" << endl;
+	}
+	TestCopyAndMove(const TestCopyAndMove& ref)
+	{
+		cout << "copy" << endl;
+	}
+	//TestCopyAndMove(TestCopyAndMove&& rv)
+	//{
+	//	cout << "move" << endl;
+	//}
+};
 
+TestCopyAndMove TestCopyAndMoveFun()
+{
+	TestCopyAndMove tcam;
+	return tcam;
+}
 int main()
 {
 	//myclass_constructor_test mtg;
@@ -525,6 +546,6 @@ int main()
 	future<int> my_future = my_promise.get_future();
 	thread mythread(thread_task, 5, move(my_promise));//如果去掉move my_promise当作左值传入 在模板特化时根据引用折叠变成左值引用 在tuple中构造时出现问题
 	mythread.detach();
-
+	TestCopyAndMove asd(TestCopyAndMoveFun());
 	return 0;
 }
