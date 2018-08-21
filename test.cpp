@@ -252,300 +252,368 @@
 //	return sonofbeach.main(argc, argv);
 //}
 
-class myclass_constructor_test
-{
-private:
-	char* my_test_v;
-	int size;
-public:
-	myclass_constructor_test()
-	{
-		my_test_v = NULL;
-		size = 0;
-		cout << "default constructor" << endl;
-	}
-	myclass_constructor_test(const myclass_constructor_test& myclass)
-	{
-		cout << "copy constructor called" << endl;
-		this->size = myclass.size;
-		this->my_test_v = myclass.my_test_v;
-	}
-	myclass_constructor_test(myclass_constructor_test&& myclass)
-	{
-		cout << "move constructor called" << endl;
-		my_test_v = myclass.my_test_v;
-		size = myclass.size;
-	}
-	myclass_constructor_test& init()
-	{
-		size = 100;
-		my_test_v = new char[size];
-		cout << "init func called" << endl;
-		strcpy_s(my_test_v, 5, "fuck");
-		return *this;
-	}
-	virtual ~myclass_constructor_test()
-	{
-		cout << "myclass_constructor_test destructor called" << endl;
-		if (my_test_v)
-		{
-			delete my_test_v;
-			my_test_v = NULL;
-		}
-		size = 0;
-	}
-	myclass_constructor_test& operator= (const myclass_constructor_test& myclass)
-	{
-		cout << "copy assignment called" << endl;
-		if (this != &myclass)
-		{
-			this->size = myclass.size;
-			this->my_test_v = myclass.my_test_v;
-		}
-		return *this;
-	}
-	myclass_constructor_test& operator= (myclass_constructor_test&& myclass)
-	{
-		cout << "move assignment called" << endl;
-		this->size = myclass.size;
-		this->my_test_v = myclass.my_test_v;
-		return *this;
-	}
-	void test_func()
-	{
-		my_test_v[0] = 'a';
-	}
-};
-class mc_testa : public myclass_constructor_test
-{
-public:
-	~mc_testa()
-	{
-		cout << "mc_testa destructor called" << endl;
-	}
-};
+//class myclass_constructor_test
+//{
+//private:
+//	char* my_test_v;
+//	int size;
+//public:
+//	myclass_constructor_test()
+//	{
+//		my_test_v = NULL;
+//		size = 0;
+//		cout << "default constructor" << endl;
+//	}
+//	myclass_constructor_test(const myclass_constructor_test& myclass)
+//	{
+//		cout << "copy constructor called" << endl;
+//		this->size = myclass.size;
+//		this->my_test_v = myclass.my_test_v;
+//	}
+//	myclass_constructor_test(myclass_constructor_test&& myclass)
+//	{
+//		cout << "move constructor called" << endl;
+//		my_test_v = myclass.my_test_v;
+//		size = myclass.size;
+//	}
+//	myclass_constructor_test& init()
+//	{
+//		size = 100;
+//		my_test_v = new char[size];
+//		cout << "init func called" << endl;
+//		strcpy_s(my_test_v, 5, "fuck");
+//		return *this;
+//	}
+//	virtual ~myclass_constructor_test()
+//	{
+//		cout << "myclass_constructor_test destructor called" << endl;
+//		if (my_test_v)
+//		{
+//			delete my_test_v;
+//			my_test_v = NULL;
+//		}
+//		size = 0;
+//	}
+//	myclass_constructor_test& operator= (const myclass_constructor_test& myclass)
+//	{
+//		cout << "copy assignment called" << endl;
+//		if (this != &myclass)
+//		{
+//			this->size = myclass.size;
+//			this->my_test_v = myclass.my_test_v;
+//		}
+//		return *this;
+//	}
+//	myclass_constructor_test& operator= (myclass_constructor_test&& myclass)
+//	{
+//		cout << "move assignment called" << endl;
+//		this->size = myclass.size;
+//		this->my_test_v = myclass.my_test_v;
+//		return *this;
+//	}
+//	void test_func()
+//	{
+//		my_test_v[0] = 'a';
+//	}
+//};
+//class mc_testa : public myclass_constructor_test
+//{
+//public:
+//	~mc_testa()
+//	{
+//		cout << "mc_testa destructor called" << endl;
+//	}
+//};
+//
+//class mc_testb : public myclass_constructor_test
+//{
+//public:
+//	~mc_testb()
+//	{
+//		cout << "mc_testb destructor called" << endl;
+//	}
+//};
+//
+//template<typename T>
+//void funObj(T x, T y)
+//{
+//	cout << typeid(x).name() << endl;
+//	cout << typeid(y).name() << endl;
+//}
+//template<typename T>
+//void funRef(const T& x, const T& y)
+//{
+//	cout << typeid(x).name() << endl;
+//	cout << typeid(y).name() << endl;
+//}
+//template<typename T>
+//void funRef_noConst(T& x, T& y)
+//{
+//	cout << typeid(x).name() << endl;
+//	cout << typeid(y).name() << endl;
+//}
+//template<typename T>
+//void g(T && value)
+//{
+//	vector<T> v;
+//}
+//class A
+//{
+//public:
+//	char x;
+//	int y;
+//	virtual void aoo() { cout << "a: foo" << endl; }
+//};
+//class B:public A
+//{
+//public:
+//	virtual void boo() { cout << "b: boo" << endl; }
+//};
+//class C
+//{
+//public:
+//	virtual void coo() { cout << "c: coo" << endl; }
+//};
+//class D :public A,public C
+//{};
+//class E :virtual public A
+//{
+//	int z;
+//	virtual void eoo() { cout << "e: eoo" << endl; }
+//};
+//class F :virtual public A
+//{
+//	virtual void foo() { cout << "f: foo" << endl; }
+//};
+//class G:public E, public F
+//{};
+//typedef void(*pfun)(void);
+//using gfun = void(*)(int);
+//
+//void thread_task(int sec, promise<int> mypromise)
+//{
+//	this_thread::sleep_for(chrono::seconds(sec));
+//	mypromise.set_value(sec);
+//}
+//
+//class test_copyable
+//{
+//public:
+//	test_copyable(int i = 0)
+//	{
+//		val = i;
+//	}
+//
+//	test_copyable(const test_copyable& other) = delete;
+//	test_copyable(test_copyable &&other)
+//	{
+//		cout << "move constructor" << endl;
+//	}
+//private:
+//	int val;
+//};
+//void test_fun(test_copyable &&T)//参数类型限定右值 注意与模板的引用坍缩区分
+//{
+//
+//}
+//template<class T>
+//void test_fun2(T&& t)
+//{
+//	test_fun(move(t));
+//}
+//class TestCopyAndMove
+//{
+//public:
+//	TestCopyAndMove()
+//	{
+//		cout << "default" << endl;
+//	}
+//	TestCopyAndMove(const TestCopyAndMove& ref)
+//	{
+//		cout << "copy" << endl;
+//	}
+//	//TestCopyAndMove(TestCopyAndMove&& rv)
+//	//{
+//	//	cout << "move" << endl;
+//	//}
+//};
+//
+//TestCopyAndMove TestCopyAndMoveFun()
+//{
+//	TestCopyAndMove tcam;
+//	return tcam;
+//}
 
-class mc_testb : public myclass_constructor_test
+
+//int main()
+//{
+//	//myclass_constructor_test mtg;
+//	//{
+//	//	myclass_constructor_test mt;
+//	//	mt.init();
+//	//	mtg = mt;
+//	//}
+//	//myclass_constructor_test* pmt = new myclass_constructor_test();
+//	//mtg.test_func();
+//	funObj(1, 2);
+//	const int a = 0;
+//	int b = 2;
+//	funObj(a, b);
+//	int* const c = &b;
+//
+//	int x;
+//	g(42);//
+//	g(move(x));//
+//	{
+//		myclass_constructor_test *mp = NULL, *mq = NULL;
+//		mp = new mc_testa();
+//		mq = new mc_testb();
+//		delete mp;
+//		delete mq;
+//		mp = NULL;
+//		mq = NULL;
+//	}
+//	cout << "============" << "sizeof A B D" << endl;
+//	cout << sizeof(A) << " " << sizeof(B) << " " << sizeof(D) << endl;
+//	cout << "============" << "sizeof E F" << endl;
+//	cout << sizeof(E) << " " << sizeof(F) << endl;
+//	A atest;
+//	B btest;
+//	cout << sizeof(int) << " " << sizeof(int*) << endl;
+//	pfun fun;
+//	fun = (pfun)*((int*)(*(int*)(&btest)));
+//	fun();
+//	fun = (pfun)*((int*)(*(int*)(&btest))+1);
+//	fun();
+//	cout << (int*)(&btest) << " " << (int*)(&btest) + 1 << endl;
+//	D dtest;
+//	int** pvftbl = (int**)(&dtest);
+//	//for (int i = 0; pvftbl[i][0] != NULL; i++)
+//	//{
+//		for (int j = 0; pvftbl[0][j] != NULL; j++)
+//		{
+//			fun = pfun(pvftbl[0][j]);
+//			fun();
+//		}
+//	//}
+//	dtest.A::x = 'a';
+//	E etest;
+//	F ftest;
+//	G gtest;
+//	/*
+//	decltype和auto都可以用来推断类型，
+//	但是二者有几处明显的差异：
+//	1.auto忽略顶层const，decltype保留顶层const；
+//	2.对引用操作，auto推断出原有类型，decltype推断出引用；
+//	3.对解引用操作，auto推断出原有类型，decltype推断出引用；
+//	4.auto推断时会实际执行，decltype不会执行，只做分析。
+//	*/
+//	const int* const p = &b;
+//	decltype(p) whatisthis = &b;
+//	cout << typeid(whatisthis).name() << endl;
+//	cout << typeid(p).name() << endl;
+//	const int* q = &b;
+//	cout << typeid(q).name() << endl;
+//	int* const qq = &b;
+//	cout << typeid(qq).name() << endl;
+//	gfun gfunf = NULL;
+//	gfunf = [](int x)->void {};
+//
+//	{
+//		int a = 1, b = 1, c = 1;
+//
+//		auto m1 = [a, &b, &c]() mutable {
+//			auto m2 = [a, b, &c]() mutable {
+//				std::cout << a << b << c << '\n';
+//				a = 4; b = 4; c = 4;
+//			};
+//			a = 3; b = 3; c = 3;
+//			m2();
+//		};
+//
+//		a = 2; b = 2; c = 2;
+//
+//		m1();                             // 调用 m2() 并打印 123
+//		std::cout << a << b << c << '\n'; // 打印 234
+//	}
+//
+//	test_copyable testa;
+//	test_copyable testb(move(testa));
+//	test_fun(move(testa));
+//	test_fun2(testa);
+//	test_fun2(move(testa));
+//
+//	int value = 0;
+//	promise<int> my_promise;
+//	future<int> my_future = my_promise.get_future();
+//	thread mythread(thread_task, 5, move(my_promise));//如果去掉move my_promise当作左值传入 在模板特化时根据引用折叠变成左值引用 在tuple中构造时出现问题
+//	mythread.detach();
+//	TestCopyAndMove asd(TestCopyAndMoveFun());
+//	//Testusingfun tf = Realtestfun;
+//	Testusingfun2 tf2 = Realtestfun;
+//	//ftest(Realtestfun);
+//	return 0;
+//}
+using Testusingfun = void(int);
+using Testusingfun2 = void(*)(int);
+
+void add1(int v)
+{
+	return;
+}
+
+template <void(*T)(int)>
+void doOperation()
+{
+	int temp = 0;
+	T(temp);
+}
+template <typename F>
+void doOperation2(F f)
+{
+	int temp = 0;
+	f(temp);
+}
+template <void(*T)(int)>
+class doOperationClass
 {
 public:
-	~mc_testb()
+	void operator()(int x)
 	{
-		cout << "mc_testb destructor called" << endl;
+		T(x);
+		return;
 	}
 };
-
-template<typename T>
-void funObj(T x, T y)
-{
-	cout << typeid(x).name() << endl;
-	cout << typeid(y).name() << endl;
-}
-template<typename T>
-void funRef(const T& x, const T& y)
-{
-	cout << typeid(x).name() << endl;
-	cout << typeid(y).name() << endl;
-}
-template<typename T>
-void funRef_noConst(T& x, T& y)
-{
-	cout << typeid(x).name() << endl;
-	cout << typeid(y).name() << endl;
-}
-template<typename T>
-void g(T && value)
-{
-	vector<T> v;
-}
-class A
-{
-public:
-	char x;
-	int y;
-	virtual void aoo() { cout << "a: foo" << endl; }
-};
-class B:public A
-{
-public:
-	virtual void boo() { cout << "b: boo" << endl; }
-};
-class C
-{
-public:
-	virtual void coo() { cout << "c: coo" << endl; }
-};
-class D :public A,public C
-{};
-class E :virtual public A
-{
-	int z;
-	virtual void eoo() { cout << "e: eoo" << endl; }
-};
-class F :virtual public A
-{
-	virtual void foo() { cout << "f: foo" << endl; }
-};
-class G:public E, public F
-{};
-typedef void(*pfun)(void);
-using gfun = void(*)(int);
-
-void thread_task(int sec, promise<int> mypromise)
-{
-	this_thread::sleep_for(chrono::seconds(sec));
-	mypromise.set_value(sec);
-}
-
-class test_copyable
-{
-public:
-	test_copyable(int i = 0)
-	{
-		val = i;
-	}
-
-	test_copyable(const test_copyable& other) = delete;
-	test_copyable(test_copyable &&other)
-	{
-		cout << "move constructor" << endl;
-	}
-private:
-	int val;
-};
-void test_fun(test_copyable &&T)//参数类型限定右值 注意与模板的引用坍缩区分
-{
-
-}
-template<class T>
-void test_fun2(T&& t)
-{
-	test_fun(move(t));
-}
-class TestCopyAndMove
-{
-public:
-	TestCopyAndMove()
-	{
-		cout << "default" << endl;
-	}
-	TestCopyAndMove(const TestCopyAndMove& ref)
-	{
-		cout << "copy" << endl;
-	}
-	//TestCopyAndMove(TestCopyAndMove&& rv)
-	//{
-	//	cout << "move" << endl;
-	//}
-};
-
-TestCopyAndMove TestCopyAndMoveFun()
-{
-	TestCopyAndMove tcam;
-	return tcam;
-}
 int main()
 {
-	//myclass_constructor_test mtg;
-	//{
-	//	myclass_constructor_test mt;
-	//	mt.init();
-	//	mtg = mt;
-	//}
-	//myclass_constructor_test* pmt = new myclass_constructor_test();
-	//mtg.test_func();
-	funObj(1, 2);
-	const int a = 0;
-	int b = 2;
-	funObj(a, b);
-	int* const c = &b;
-
-	int x;
-	g(42);//
-	g(move(x));//
+	doOperation<add1>();
+	doOperation2(add1);
+	Testusingfun2 t2 = add1;
+	//doOperation<t2>();//You cannot use the name or address of a local variable as a template argument
+	doOperationClass<add1> object1;
+	object1(1);
+	list<int> ll{0,1,1,2,3,4,5};
+	vector<int> vv{ 0,1,2,2,3,4,5 };
+	list<int>::iterator it1;
+	vector<int>::iterator it2;
+	for (it1 = ll.begin(); it1 != ll.end();)
 	{
-		myclass_constructor_test *mp = NULL, *mq = NULL;
-		mp = new mc_testa();
-		mq = new mc_testb();
-		delete mp;
-		delete mq;
-		mp = NULL;
-		mq = NULL;
-	}
-	cout << "============" << "sizeof A B D" << endl;
-	cout << sizeof(A) << " " << sizeof(B) << " " << sizeof(D) << endl;
-	cout << "============" << "sizeof E F" << endl;
-	cout << sizeof(E) << " " << sizeof(F) << endl;
-	A atest;
-	B btest;
-	cout << sizeof(int) << " " << sizeof(int*) << endl;
-	pfun fun;
-	fun = (pfun)*((int*)(*(int*)(&btest)));
-	fun();
-	fun = (pfun)*((int*)(*(int*)(&btest))+1);
-	fun();
-	cout << (int*)(&btest) << " " << (int*)(&btest) + 1 << endl;
-	D dtest;
-	int** pvftbl = (int**)(&dtest);
-	//for (int i = 0; pvftbl[i][0] != NULL; i++)
-	//{
-		for (int j = 0; pvftbl[0][j] != NULL; j++)
+		if (*it1 == 1)
 		{
-			fun = pfun(pvftbl[0][j]);
-			fun();
+			it1 = ll.erase(it1);
 		}
-	//}
-	dtest.A::x = 'a';
-	E etest;
-	F ftest;
-	G gtest;
-	/*
-	decltype和auto都可以用来推断类型，
-	但是二者有几处明显的差异：
-	1.auto忽略顶层const，decltype保留顶层const；
-	2.对引用操作，auto推断出原有类型，decltype推断出引用；
-	3.对解引用操作，auto推断出原有类型，decltype推断出引用；
-	4.auto推断时会实际执行，decltype不会执行，只做分析。
-	*/
-	const int* const p = &b;
-	decltype(p) whatisthis = &b;
-	cout << typeid(whatisthis).name() << endl;
-	cout << typeid(p).name() << endl;
-	const int* q = &b;
-	cout << typeid(q).name() << endl;
-	int* const qq = &b;
-	cout << typeid(qq).name() << endl;
-	gfun gfunf = NULL;
-	gfunf = [](int x)->void {};
-
+		else
+			it1++;
+	}
+	for (it2 = vv.begin(); it2 != vv.end();)
 	{
-		int a = 1, b = 1, c = 1;
-
-		auto m1 = [a, &b, &c]() mutable {
-			auto m2 = [a, b, &c]() mutable {
-				std::cout << a << b << c << '\n';
-				a = 4; b = 4; c = 4;
-			};
-			a = 3; b = 3; c = 3;
-			m2();
-		};
-
-		a = 2; b = 2; c = 2;
-
-		m1();                             // 调用 m2() 并打印 123
-		std::cout << a << b << c << '\n'; // 打印 234
+		if (*it2 == 2)
+		{
+			it2 = vv.erase(it2);
+		}
+		else
+			it2++;
 	}
 
-	test_copyable testa;
-	test_copyable testb(move(testa));
-	test_fun(move(testa));
-	test_fun2(testa);
-	test_fun2(move(testa));
-
-	int value = 0;
-	promise<int> my_promise;
-	future<int> my_future = my_promise.get_future();
-	thread mythread(thread_task, 5, move(my_promise));//如果去掉move my_promise当作左值传入 在模板特化时根据引用折叠变成左值引用 在tuple中构造时出现问题
-	mythread.detach();
-	TestCopyAndMove asd(TestCopyAndMoveFun());
 	return 0;
 }
