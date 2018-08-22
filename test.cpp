@@ -1,5 +1,5 @@
 #include "test.h"
-
+#include "function.h"
 //#define _CRT_SECURE_NO_WARNINGS 1
 //
 //#include <WINSOCK2.H>
@@ -584,6 +584,12 @@ public:
 		return;
 	}
 };
+template <typename T>
+T returntestfun(T t)
+{
+	return t;
+}
+
 int main()
 {
 	doOperation<add1>();
@@ -614,6 +620,12 @@ int main()
 		else
 			it2++;
 	}
+	function<Testusingfun> testfunctional = add1;
+	int m = returntestfun<int>(2);
 
+	//time_std_function<std::function<void(float)>>(argc, "std::function");
+	//time_std_function<func::function<void(float)>>(argc, "func::function");
+	func::function<void(int)> testmyfunc;
+	testmyfunc = add1;
 	return 0;
 }
