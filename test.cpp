@@ -640,6 +640,83 @@ void PrintType()
 	cout << typeid(T).name() << endl;
 }
 
+template < typename T, typename... List >
+struct IndexOf;
+
+template < typename T, typename Head, typename... Rest >
+struct IndexOf<T, Head, Rest...>
+{
+	enum { value = IndexOf<T, Rest...>::value + 1 };
+};
+
+template < typename T, typename... Rest >
+struct IndexOf<T, T, Rest...>
+{
+	enum { value = 0 };
+};
+
+template < typename T >
+struct IndexOf<T>
+{
+	enum { value = -1 };
+};
+template<typename T>
+void commfuntest();
+template<typename T>
+void commfuntest<T>(){}
+
+template<typename T>
+class aTMP {
+public: typedef const T reType;
+};
+
+void f() { std::cout << "global f()\n"; }
+
+template<typename T>
+class Base {
+public:
+	template <int N = 99>
+	void f() { std::cout << "member f(): " << N << '\n'; }
+};
+
+template<typename T>
+class Derived : public Base<T> {
+public:
+	typename T::reType m; // https://zh.cppreference.com/w/cpp/language/dependent_name
+	Derived(typename T::reType a) : m(a) { }
+	void df1() { f(); }                       // 调用全局 f()，而非想象中的基类 f()
+	void df2() 
+	{
+#ifdef __GNUC__
+		this->template f(); 
+#elif defined(_MSC_VER)
+		this->f();
+#endif
+	}        // 基类 f<99>()
+	void df3() { Base<T>::template f<22>(); } // 强制基类 f<22>()
+	void df4() { ::f(); }                     // 强制全局 f()
+};
+
+// 神一般的代码 通过编译期的报错 来计算N以内的所有素数 需要关闭遇到第一个错误就停止编译的选项
+//template<int i> struct D { D(void*); operator int(); }; // 构造函数参数为 void* 指针
+//
+//template<int p, int i> struct is_prime { // 判断 p 是否为素数，即 p 不能整除 2...p-1
+//	enum { prim = (p%i) && is_prime<(i > 2 ? p : 0), i - 1>::prim };
+//};
+//template<> struct is_prime<0, 0> { enum { prim = 1 }; };
+//template<> struct is_prime<0, 1> { enum { prim = 1 }; };
+//
+//template<int i> struct Prime_print {
+//	Prime_print<i - 1> a;
+//	enum { prim = is_prime<i, i - 1>::prim };
+//	// prim 为真时， prim?1:0 为 1，int 到 D<i> 转换报错；假时， 0 为 NULL 指针不报错
+//	void f() { D<i> d = prim ? 1 : 0; a.f(); } // 调用 a.f() 实例化 Prime_print<i-1>::f()
+//};
+//template<> struct Prime_print<2> { // 特例，递归终止
+//	enum { prim = 1 };
+//	void f() { D<2> d = prim ? 1 : 0; }
+//};
+
 int main()
 {
 	doOperation<add1>();
@@ -682,6 +759,11 @@ int main()
 	PrintType<function_traits<std::function<int(int)>>::function_type>(); //将输出int __cdecl(int)
 	PrintType<function_traits<std::function<int(int)>>::args<0>::type>();//将输出int
 	PrintType<function_traits<decltype(fff)>::function_type>();//将输出int __cdecl(int)
+	commfuntest<int>();//在定义模板特例之前必须已经有模板通例（primary template）的声明；
+	cout << IndexOf<int, char, short, double, float, int>::value << endl;
+
+	Derived<aTMP<int>> a(10);
+	a.df1(); a.df2(); a.df3(); a.df4();
 
 	return 0;
 }
