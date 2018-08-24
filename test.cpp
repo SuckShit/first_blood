@@ -716,7 +716,7 @@ public:
 //	enum { prim = 1 };
 //	void f() { D<2> d = prim ? 1 : 0; }
 //};
-
+#define PASTE(x, y) x ## y
 int main()
 {
 	doOperation<add1>();
@@ -764,6 +764,6 @@ int main()
 
 	Derived<aTMP<int>> a(10);
 	a.df1(); a.df2(); a.df3(); a.df4();
-
+	cout << PASTE("asd", "zxc") << endl;
 	return 0;
 }
