@@ -717,6 +717,13 @@ public:
 //	void f() { D<2> d = prim ? 1 : 0; }
 //};
 #define PASTE(x, y) x ## y
+template <typename T>
+void funtestconst(T& param) { cout << typeid(T).name() << " T" << endl; }
+//template <typename T>
+//void funtestconst(const T& param) { cout << typeid(T).name() << " T&" << endl; }
+
+void funtestconst2(int& param){}
+
 int main()
 {
 	doOperation<add1>();
@@ -765,5 +772,12 @@ int main()
 	Derived<aTMP<int>> a(10);
 	a.df1(); a.df2(); a.df3(); a.df4();
 	cout << PASTE("asd", "zxc") << endl;
+	int x = 10;
+	const int ax = x;
+	const int& bx = x;
+	funtestconst(ax);
+	funtestconst(bx);
+	//funtestconst2(ax); //err
+	//funtestconst2(bx); //err
 	return 0;
 }
