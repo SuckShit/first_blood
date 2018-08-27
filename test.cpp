@@ -724,6 +724,19 @@ void funtestconst(T& param) { cout << typeid(T).name() << " T" << endl; }
 
 void funtestconst2(int& param){}
 
+template<typename Container, typename Index>
+auto autotemplatededuce(Container &c, Index i)->decltype(c[i])
+{
+	return c[i];
+}
+template<typename Container>
+void ranl(Container &c)
+{}
+vector<int> makeintvec()
+{
+	vector<int> veci = { 10 };
+	return veci;
+}
 int main()
 {
 	doOperation<add1>();
@@ -777,7 +790,13 @@ int main()
 	const int& bx = x;
 	funtestconst(ax);
 	funtestconst(bx);
+	//funtestconst(move(x)); //err 右值无法绑定到左值引用
 	//funtestconst2(ax); //err
 	//funtestconst2(bx); //err
+	vector<int> veci = { 0, 1, 2, 3, 4, 5 };
+	autotemplatededuce(veci, 5) = 10;
+	auto s = autotemplatededuce(makeintvec(), 0);
+	auto ss = autotemplatededuce(move(veci), 5);//为啥这个右值可以绑定到左值引用
+	ranl(move(veci));
 	return 0;
 }
