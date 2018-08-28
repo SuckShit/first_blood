@@ -9,5 +9,7 @@
 #include <windows.h>
 #include <functional>
 #include <list>
-//#include <boost/filesystem.hpp>
+#include <unordered_map>
+#include <boost/type_index.hpp>
+#include <boost/filesystem.hpp>
 using namespace std;

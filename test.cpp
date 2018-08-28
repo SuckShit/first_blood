@@ -798,5 +798,15 @@ int main()
 	auto s = autotemplatededuce(makeintvec(), 0);
 	auto ss = autotemplatededuce(move(veci), 5);//为啥这个右值可以绑定到左值引用
 	ranl(move(veci));
+
+	unordered_map<string, string> u = {
+	{ "RED","#FF0000" },
+	{ "GREEN","#00FF00" },
+	{ "BLUE","#0000FF" }
+	};
+	for (const auto& n : u) {
+		cout << typeid(n.first).name() << endl;//由于我们不能改变一个元素的关键字，因此这些pair的关键字部分是const的;用boost查看
+	}
+	
 	return 0;
 }

@@ -37,3 +37,4 @@ test.sln
 test.vcxproj
 test.vcxproj.filters
 test.vcxproj.user
+packages/
