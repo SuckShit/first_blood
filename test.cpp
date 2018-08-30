@@ -1,5 +1,5 @@
 #include "test.h"
-#include "function.h"
+//#include "function.h"
 //#define _CRT_SECURE_NO_WARNINGS 1
 //
 //#include <WINSOCK2.H>
@@ -732,7 +732,7 @@ auto autotemplatededuce(Container &c, Index i)->decltype(c[i])
 template<typename Container>
 void ranl(Container &c)
 {
-	cout << type_id_with_cvr<Container>().pretty_name() << endl;
+	//cout << type_id_with_cvr<Container>().pretty_name() << endl;
 }
 vector<int> makeintvec()
 {
@@ -770,6 +770,8 @@ unsigned int bits(unsigned int *pn, int WIDTH)
 	}
 	return 0;
 }
+
+constexpr int constexprfuntest(int x) { return x; }
 int main()
 {
 	doOperation<add1>();
@@ -805,8 +807,8 @@ int main()
 
 	//time_std_function<std::function<void(float)>>(argc, "std::function");
 	//time_std_function<func::function<void(float)>>(argc, "func::function");
-	func::function<void(int)> testmyfunc;
-	testmyfunc = add1;
+	//func::function<void(int)> testmyfunc;
+	//testmyfunc = add1;
 
 	std::function<int(int)> fff = [](int a) {return a; };
 	PrintType<function_traits<std::function<int(int)>>::function_type>(); //将输出int __cdecl(int)
@@ -841,7 +843,7 @@ int main()
 	for (auto& n : u) 
 	{
 		cout << typeid(n.first).name() << endl;//由于我们不能改变一个元素的关键字，因此这些pair的关键字部分是const的;用boost查看
-		cout << type_id_with_cvr<decltype(n.first)>().pretty_name() << endl;
+		//cout << type_id_with_cvr<decltype(n.first)>().pretty_name() << endl;
 	}
 	
 	randlmemfuntest rlt;
@@ -850,5 +852,7 @@ int main()
 
 	unsigned int pn[4] = { 4294967294, 268435454, 65535, 0 };
 	int _what_ = bits(pn, 4);
+	int _x = 5;
+	std::array<int, constexprfuntest(5)> arr;
 	return 0;
 }

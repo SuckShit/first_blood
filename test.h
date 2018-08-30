@@ -10,7 +10,8 @@
 #include <functional>
 #include <list>
 #include <unordered_map>
-#include <boost/type_index.hpp>
+#include <array>
+//#include <boost/type_index.hpp>
 //#include <boost/filesystem.hpp>
 using namespace std;
-using boost::typeindex::type_id_with_cvr;
+//using boost::typeindex::type_id_with_cvr;
