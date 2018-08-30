@@ -739,6 +739,37 @@ vector<int> makeintvec()
 	vector<int> veci = { 10 };
 	return veci;
 }
+class randlmemfuntest
+{
+public:
+	randlmemfuntest()
+	{
+		cout << "this is constructor" << endl;
+	}
+	void testrlfun() &
+	{
+		cout << "this is l fun" << endl;
+	}
+	void testrlfun() &&
+	{
+		cout << "this is r fun" << endl;
+	}
+};
+void shellfun(randlmemfuntest&& rl) { forward<randlmemfuntest>(rl).testrlfun(); return; }
+
+unsigned int bits(unsigned int *pn, int WIDTH)
+{
+	for (int pos = WIDTH - 1; pos >= 0; pos--) {
+		if (pn[pos]) {
+			for (int nbits = 31; nbits > 0; nbits--) {
+				if (pn[pos] & 1 << nbits)//妈的傻逼百度百科运算符优先级是错的 位移在与之上
+					return 32 * pos + nbits + 1;
+			}
+			return 32 * pos + 1;
+		}
+	}
+	return 0;
+}
 int main()
 {
 	doOperation<add1>();
@@ -813,5 +844,11 @@ int main()
 		cout << type_id_with_cvr<decltype(n.first)>().pretty_name() << endl;
 	}
 	
+	randlmemfuntest rlt;
+	rlt.testrlfun();
+	shellfun(move(rlt));
+
+	unsigned int pn[4] = { 4294967294, 268435454, 65535, 0 };
+	int _what_ = bits(pn, 4);
 	return 0;
 }
