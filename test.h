@@ -11,7 +11,9 @@
 #include <list>
 #include <unordered_map>
 #include <array>
+#include <dbghelp.h>
 //#include <boost/type_index.hpp>
 //#include <boost/filesystem.hpp>
 using namespace std;
 //using boost::typeindex::type_id_with_cvr;
+#pragma comment(lib,"Dbghelp.lib")

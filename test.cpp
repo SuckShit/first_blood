@@ -772,6 +772,45 @@ unsigned int bits(unsigned int *pn, int WIDTH)
 }
 
 constexpr int constexprfuntest(int x) { return x; }
+#ifdef _MSC_VER
+void printbacktrace(int frames)
+{
+	frames > 10 ? frames = 10 : 1;
+	void* backstack[10];
+	auto process = GetCurrentProcess();
+	SymInitialize(process, nullptr, true);
+	auto stackfm = CaptureStackBackTrace(0, frames, backstack, nullptr);
+	auto syminfo = (SYMBOL_INFO*)malloc(sizeof(SYMBOL_INFO) + 1024);
+	syminfo->MaxNameLen = 1024;
+	syminfo->SizeOfStruct = sizeof(SYMBOL_INFO);
+	DWORD disp;
+	auto line = (IMAGEHLP_LINE64*)malloc(sizeof(IMAGEHLP_LINE64));
+	line->SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+	for (int i = 0; i < stackfm; i++)
+	{
+		DWORD64 stkadd = (DWORD64)backstack[i];
+		if (SymFromAddr(process, stkadd, 0, syminfo))
+		{
+			if(SymGetLineFromAddr64(process, stkadd, &disp, line))
+			{
+				printf("\tat %s in %s: line: %lu: address: 0x%0X\n", 
+					syminfo->Name, line->FileName, line->LineNumber, syminfo->Address);
+			}
+			else
+			{
+				printf("\tSymGetLineFromAddr64 returned error code %lu.\n", GetLastError());
+				printf("\tat %s, address 0x%0X.\n", syminfo->Name, syminfo->Address);
+			}
+		}
+		else
+		{
+			DWORD err = GetLastError();
+			cout << "stack[" << i << "] err" << endl;
+			break;
+		}
+	}
+}
+#endif
 int main()
 {
 	doOperation<add1>();
@@ -854,5 +893,6 @@ int main()
 	int _what_ = bits(pn, 4);
 	int _x = 5;
 	std::array<int, constexprfuntest(5)> arr;
+	x = constexprfuntest(x);
 	return 0;
 }
