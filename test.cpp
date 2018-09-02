@@ -772,6 +772,7 @@ unsigned int bits(unsigned int *pn, int WIDTH)
 }
 
 constexpr int constexprfuntest(int x) { return x; }
+#if 0
 #ifdef _MSC_VER
 void printbacktrace(int frames)
 {
@@ -810,6 +811,7 @@ void printbacktrace(int frames)
 		}
 	}
 }
+#endif
 #endif
 int main()
 {
@@ -894,5 +896,10 @@ int main()
 	int _x = 5;
 	std::array<int, constexprfuntest(5)> arr;
 	x = constexprfuntest(x);
+	int _y = 0;
+	cin >> _y;
+	_y = constexprfuntest(_y);
+
+	cpp11impltest impltest;
 	return 0;
 }

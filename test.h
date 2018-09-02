@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <array>
 #include <dbghelp.h>
-//#include <boost/type_index.hpp>
+#include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
 //using boost::typeindex::type_id_with_cvr;
