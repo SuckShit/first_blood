@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <array>
 #include <dbghelp.h>
+#include <type_traits>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;

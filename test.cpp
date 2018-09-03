@@ -813,6 +813,49 @@ void printbacktrace(int frames)
 }
 #endif
 #endif
+vector<string> names;
+template <typename T>
+void universereftest(T&& name)
+{
+	names.emplace_back(forward<T>(name));
+}
+void universereftest(int idx)//如果调用时传入的入参是short类型，重载决议会决定调用万能引用的函数版本，结果int转string出问题，编译出错
+{
+	return;
+}
+//解决方案 标签分派
+template <typename T>
+void unvreftestimp(T&& name, false_type)//编译阶段无bool型
+{
+	names.emplace_back(forward<T>(name));
+}
+template <typename T>
+void unvreftestimp(T&& name, true_type)
+{
+	return;
+}
+template <typename T>
+void unvreftest(T&& name)
+{
+	return unvreftestimp(forward<T>(name), is_integral<typename remove_reference<T>::type>::value);//如果传入的name是个左值，根据引用坍缩，T是左值引用，所以直接is_integral<T>, 返回的是false_type
+}
+
+//一个防止编译器总是重载决议使用万能引用类型T的构造函数版本而引发问题的修改方案
+string namefromid(int idx)
+{
+	return string("test");
+}
+class Person
+{
+public:
+	template<typename T,
+		typename = typename enable_if<!is_base_of<Person, typename decay<T>::type>::value &&
+									  !is_integral<typename remove_reference<T>::type>::value>::type>
+		explicit Person(T&& n):name(forward<T>(n)){}
+	explicit Person(int idx):name(namefromid(idx)){}
+private:
+	string name;
+};
 int main()
 {
 	doOperation<add1>();
@@ -901,5 +944,8 @@ int main()
 	_y = constexprfuntest(_y);
 
 	cpp11impltest impltest;
+	Person p1(1);
+	Person p2("asd");
+	auto p3(p1);
 	return 0;
 }
