@@ -856,6 +856,19 @@ public:
 private:
 	string name;
 };
+
+class staticmemtest
+{
+public:
+	const static int value = 1;
+};
+//int staticmemtest::value = 1;
+void staticmemfuntest(int i){}
+template <typename T>
+void fwd(T&& arg)
+{
+	staticmemfuntest(forward<T>(arg));
+}
 int main()
 {
 	doOperation<add1>();
@@ -947,5 +960,7 @@ int main()
 	Person p1(1);
 	Person p2("asd");
 	auto p3(p1);
+	auto p = &(staticmemtest::value);
+	fwd(staticmemtest::value);//msc_ver√ª”–±®¥Ì
 	return 0;
 }
