@@ -952,9 +952,9 @@ int main()
 	int _x = 5;
 	std::array<int, constexprfuntest(5)> arr;
 	x = constexprfuntest(x);
-	int _y = 0;
-	cin >> _y;
-	_y = constexprfuntest(_y);
+	//int _y = 0;
+	//cin >> _y;
+	//_y = constexprfuntest(_y);
 
 	cpp11impltest impltest;
 	Person p1(1);
@@ -962,5 +962,11 @@ int main()
 	auto p3(p1);
 	auto p = &(staticmemtest::value);
 	fwd(staticmemtest::value);//msc_ver√ª”–±®¥Ì
+
+	{
+		unique_ptr<BaseCs> ub = make_unique<DeprivedCs>();
+		unique_ptr<BaseCs> ub2(new DeprivedCs());
+	}
+	
 	return 0;
 }

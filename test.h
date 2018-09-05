@@ -18,3 +18,14 @@
 using namespace std;
 //using boost::typeindex::type_id_with_cvr;
 #pragma comment(lib,"Dbghelp.lib")
+
+class BaseCs
+{
+public:
+	virtual ~BaseCs() { cout << "Base destruction" << endl; }
+};
+class DeprivedCs:public BaseCs
+{
+public:
+	~DeprivedCs() { cout << "Deprived destruction" << endl; }
+};
