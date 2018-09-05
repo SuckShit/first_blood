@@ -869,6 +869,18 @@ void fwd(T&& arg)
 {
 	staticmemfuntest(forward<T>(arg));
 }
+vector<function<int(int)>> filters;
+class lambdatest
+{
+public:
+	lambdatest() { div = 4; }
+	void addfilter()
+	{
+		filters.emplace_back([=](int val) {return val % div; });
+	}
+private:
+	int div;
+};
 int main()
 {
 	doOperation<add1>();
@@ -967,6 +979,15 @@ int main()
 		unique_ptr<BaseCs> ub = make_unique<DeprivedCs>();
 		unique_ptr<BaseCs> ub2(new DeprivedCs());
 	}
-	
+	{
+		auto lbd = make_unique<lambdatest>();
+		lbd->addfilter();
+	}
+	auto res = filters[0](7);
+
+	vector<int> lbdv;
+	lbdv.push_back(11);
+	auto funclbdv = bind([](const vector<int>& data) {cout << data[0] << endl; }, move(lbdv));
+	funclbdv();
 	return 0;
 }
