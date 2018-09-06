@@ -16,6 +16,7 @@
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
+using namespace placeholders;
 //using boost::typeindex::type_id_with_cvr;
 #pragma comment(lib,"Dbghelp.lib")
 

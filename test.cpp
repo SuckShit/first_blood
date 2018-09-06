@@ -881,6 +881,16 @@ public:
 private:
 	int div;
 };
+
+void PrintAandB(string A, string B)
+{
+	cout << A << B << endl;
+}
+string PringStr(string A)
+{
+	cout << A << endl;
+	return A;
+}
 int main()
 {
 	doOperation<add1>();
@@ -989,5 +999,8 @@ int main()
 	lbdv.push_back(11);
 	auto funclbdv = bind([](const vector<int>& data) {cout << data[0] << endl; }, move(lbdv));
 	funclbdv();
+
+	auto bindtest = bind(PrintAandB, bind(PringStr, _1), bind(PringStr, _2));
+	bindtest("fuck", " you");
 	return 0;
 }
