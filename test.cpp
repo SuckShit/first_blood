@@ -1002,5 +1002,11 @@ int main()
 
 	auto bindtest = bind(PrintAandB, bind(PringStr, _1), bind(PringStr, _2));
 	bindtest("fuck", " you");
+
+	Handle<MyObj> myobjptr;
+	{
+		myobjptr = new MyObj();
+	}
+
 	return 0;
 }
