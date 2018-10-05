@@ -554,459 +554,465 @@
 //	//ftest(Realtestfun);
 //	return 0;
 //}
-using Testusingfun = void(int);
-using Testusingfun2 = void(*)(int);
-
-void add1(int v)
-{
-	return;
-}
-
-template <void(*T)(int)>
-void doOperation()
-{
-	int temp = 0;
-	T(temp);
-}
-template <typename F>
-void doOperation2(F f)
-{
-	int temp = 0;
-	f(temp);
-}
-template <void(*T)(int)>
-class doOperationClass
-{
-public:
-	void operator()(int x)
-	{
-		T(x);
-		return;
-	}
-};
-template <typename T>
-T returntestfun(T t)
-{
-	return t;
-}
-
-template<typename T>
-struct function_traits;
-
-//普通函数
-template<typename Ret, typename... Args>
-struct function_traits<Ret(Args...)>
-{
-public:
-	enum { arity = sizeof...(Args) };
-	typedef Ret function_type(Args...);
-	typedef Ret return_type;
-	using stl_function_type = std::function<function_type>;
-	typedef Ret(*pointer)(Args...);
-
-	template<size_t I>
-	struct args
-	{
-		static_assert(I < arity, "index is out of range, index must less than sizeof Args");
-		using type = typename std::tuple_element<I, std::tuple<Args...>>::type;
-	};
-};
-
-//函数指针
-template<typename Ret, typename... Args>
-struct function_traits<Ret(*)(Args...)> : function_traits<Ret(Args...)> {};
-
-//std::function
-template <typename Ret, typename... Args>
-struct function_traits<std::function<Ret(Args...)>> : function_traits<Ret(Args...)> {};
-
-//member function
-#define FUNCTION_TRAITS(...) \
-    template <typename ReturnType, typename ClassType, typename... Args>\
-    struct function_traits<ReturnType(ClassType::*)(Args...) __VA_ARGS__> : function_traits<ReturnType(Args...)>{}; \
-
-FUNCTION_TRAITS()
-FUNCTION_TRAITS(const)
-FUNCTION_TRAITS(volatile)
-FUNCTION_TRAITS(const volatile)
-
-//函数对象
-template<typename Callable>
-struct function_traits : function_traits<decltype(&Callable::operator())> {};
-
-template<typename T>
-void PrintType()
-{
-	cout << typeid(T).name() << endl;
-}
-
-template < typename T, typename... List >
-struct IndexOf;
-
-template < typename T, typename Head, typename... Rest >
-struct IndexOf<T, Head, Rest...>
-{
-	enum { value = IndexOf<T, Rest...>::value + 1 };
-};
-
-template < typename T, typename... Rest >
-struct IndexOf<T, T, Rest...>
-{
-	enum { value = 0 };
-};
-
-template < typename T >
-struct IndexOf<T>
-{
-	enum { value = -1 };
-};
-template<typename T>
-void commfuntest();
-template<typename T>
-void commfuntest<T>(){}
-
-template<typename T>
-class aTMP {
-public: typedef const T reType;
-};
-
-void f() { std::cout << "global f()\n"; }
-
-template<typename T>
-class Base {
-public:
-	template <int N = 99>
-	void f() { std::cout << "member f(): " << N << '\n'; }
-};
-
-template<typename T>
-class Derived : public Base<T> {
-public:
-	typename T::reType m; // https://zh.cppreference.com/w/cpp/language/dependent_name
-	Derived(typename T::reType a) : m(a) { }
-	void df1() { f(); }                       // 调用全局 f()，而非想象中的基类 f()
-	void df2() 
-	{
-#ifdef __GNUC__
-		this->template f(); 
-#elif defined(_MSC_VER)
-		this->f();
-#endif
-	}        // 基类 f<99>()
-	void df3() { Base<T>::template f<22>(); } // 强制基类 f<22>()
-	void df4() { ::f(); }                     // 强制全局 f()
-};
-
-// 神一般的代码 通过编译期的报错 来计算N以内的所有素数 需要关闭遇到第一个错误就停止编译的选项
-//template<int i> struct D { D(void*); operator int(); }; // 构造函数参数为 void* 指针
 //
-//template<int p, int i> struct is_prime { // 判断 p 是否为素数，即 p 不能整除 2...p-1
-//	enum { prim = (p%i) && is_prime<(i > 2 ? p : 0), i - 1>::prim };
-//};
-//template<> struct is_prime<0, 0> { enum { prim = 1 }; };
-//template<> struct is_prime<0, 1> { enum { prim = 1 }; };
+//using Testusingfun = void(int);
+//using Testusingfun2 = void(*)(int);
 //
-//template<int i> struct Prime_print {
-//	Prime_print<i - 1> a;
-//	enum { prim = is_prime<i, i - 1>::prim };
-//	// prim 为真时， prim?1:0 为 1，int 到 D<i> 转换报错；假时， 0 为 NULL 指针不报错
-//	void f() { D<i> d = prim ? 1 : 0; a.f(); } // 调用 a.f() 实例化 Prime_print<i-1>::f()
+//void add1(int v)
+//{
+//	return;
+//}
+//
+//template <void(*T)(int)>
+//void doOperation()
+//{
+//	int temp = 0;
+//	T(temp);
+//}
+//template <typename F>
+//void doOperation2(F f)
+//{
+//	int temp = 0;
+//	f(temp);
+//}
+//template <void(*T)(int)>
+//class doOperationClass
+//{
+//public:
+//	void operator()(int x)
+//	{
+//		T(x);
+//		return;
+//	}
 //};
-//template<> struct Prime_print<2> { // 特例，递归终止
-//	enum { prim = 1 };
-//	void f() { D<2> d = prim ? 1 : 0; }
-//};
-#define PASTE(x, y) x ## y
-template <typename T>
-void funtestconst(T& param) { cout << typeid(T).name() << " T" << endl; }
 //template <typename T>
-//void funtestconst(const T& param) { cout << typeid(T).name() << " T&" << endl; }
+//T returntestfun(T t)
+//{
+//	return t;
+//}
+//
+//template<typename T>
+//struct function_traits;
+//
+////普通函数
+//template<typename Ret, typename... Args>
+//struct function_traits<Ret(Args...)>
+//{
+//public:
+//	enum { arity = sizeof...(Args) };
+//	typedef Ret function_type(Args...);
+//	typedef Ret return_type;
+//	using stl_function_type = std::function<function_type>;
+//	typedef Ret(*pointer)(Args...);
+//
+//	template<size_t I>
+//	struct args
+//	{
+//		static_assert(I < arity, "index is out of range, index must less than sizeof Args");
+//		using type = typename std::tuple_element<I, std::tuple<Args...>>::type;
+//	};
+//};
+//
+////函数指针
+//template<typename Ret, typename... Args>
+//struct function_traits<Ret(*)(Args...)> : function_traits<Ret(Args...)> {};
+//
+////std::function
+//template <typename Ret, typename... Args>
+//struct function_traits<std::function<Ret(Args...)>> : function_traits<Ret(Args...)> {};
+//
+////member function
+//#define FUNCTION_TRAITS(...) \
+//    template <typename ReturnType, typename ClassType, typename... Args>\
+//    struct function_traits<ReturnType(ClassType::*)(Args...) __VA_ARGS__> : function_traits<ReturnType(Args...)>{}; \
+//
+//FUNCTION_TRAITS()
+//FUNCTION_TRAITS(const)
+//FUNCTION_TRAITS(volatile)
+//FUNCTION_TRAITS(const volatile)
+//
+////函数对象
+//template<typename Callable>
+//struct function_traits : function_traits<decltype(&Callable::operator())> {};
+//
+//template<typename T>
+//void PrintType()
+//{
+//	cout << typeid(T).name() << endl;
+//}
+//
+//template < typename T, typename... List >
+//struct IndexOf;
+//
+//template < typename T, typename Head, typename... Rest >
+//struct IndexOf<T, Head, Rest...>
+//{
+//	enum { value = IndexOf<T, Rest...>::value + 1 };
+//};
+//
+//template < typename T, typename... Rest >
+//struct IndexOf<T, T, Rest...>
+//{
+//	enum { value = 0 };
+//};
+//
+//template < typename T >
+//struct IndexOf<T>
+//{
+//	enum { value = -1 };
+//};
+//template<typename T>
+//void commfuntest();
+//template<typename T>
+//void commfuntest<T>(){}
+//
+//template<typename T>
+//class aTMP {
+//public: typedef const T reType;
+//};
+//
+//void f() { std::cout << "global f()\n"; }
+//
+//template<typename T>
+//class Base {
+//public:
+//	template <int N = 99>
+//	void f() { std::cout << "member f(): " << N << '\n'; }
+//};
+//
+//template<typename T>
+//class Derived : public Base<T> {
+//public:
+//	typename T::reType m; // https://zh.cppreference.com/w/cpp/language/dependent_name
+//	Derived(typename T::reType a) : m(a) { }
+//	void df1() { f(); }                       // 调用全局 f()，而非想象中的基类 f()
+//	void df2() 
+//	{
+//#ifdef __GNUC__
+//		this->template f(); 
+//#elif defined(_MSC_VER)
+//		this->f();
+//#endif
+//	}        // 基类 f<99>()
+//	void df3() { Base<T>::template f<22>(); } // 强制基类 f<22>()
+//	void df4() { ::f(); }                     // 强制全局 f()
+//};
+//
+//// 神一般的代码 通过编译期的报错 来计算N以内的所有素数 需要关闭遇到第一个错误就停止编译的选项
+////template<int i> struct D { D(void*); operator int(); }; // 构造函数参数为 void* 指针
+////
+////template<int p, int i> struct is_prime { // 判断 p 是否为素数，即 p 不能整除 2...p-1
+////	enum { prim = (p%i) && is_prime<(i > 2 ? p : 0), i - 1>::prim };
+////};
+////template<> struct is_prime<0, 0> { enum { prim = 1 }; };
+////template<> struct is_prime<0, 1> { enum { prim = 1 }; };
+////
+////template<int i> struct Prime_print {
+////	Prime_print<i - 1> a;
+////	enum { prim = is_prime<i, i - 1>::prim };
+////	// prim 为真时， prim?1:0 为 1，int 到 D<i> 转换报错；假时， 0 为 NULL 指针不报错
+////	void f() { D<i> d = prim ? 1 : 0; a.f(); } // 调用 a.f() 实例化 Prime_print<i-1>::f()
+////};
+////template<> struct Prime_print<2> { // 特例，递归终止
+////	enum { prim = 1 };
+////	void f() { D<2> d = prim ? 1 : 0; }
+////};
+//#define PASTE(x, y) x ## y
+//template <typename T>
+//void funtestconst(T& param) { cout << typeid(T).name() << " T" << endl; }
+////template <typename T>
+////void funtestconst(const T& param) { cout << typeid(T).name() << " T&" << endl; }
+//
+//void funtestconst2(int& param){}
+//
+//template<typename Container, typename Index>
+//auto autotemplatededuce(Container &c, Index i)->decltype(c[i])
+//{
+//	return c[i];
+//}
+//template<typename Container>
+//void ranl(Container &c)
+//{
+//	//cout << type_id_with_cvr<Container>().pretty_name() << endl;
+//}
+//vector<int> makeintvec()
+//{
+//	vector<int> veci = { 10 };
+//	return veci;
+//}
+//class randlmemfuntest
+//{
+//public:
+//	randlmemfuntest()
+//	{
+//		cout << "this is constructor" << endl;
+//	}
+//	void testrlfun() &
+//	{
+//		cout << "this is l fun" << endl;
+//	}
+//	void testrlfun() &&
+//	{
+//		cout << "this is r fun" << endl;
+//	}
+//};
+//void shellfun(randlmemfuntest&& rl) { forward<randlmemfuntest>(rl).testrlfun(); return; }
+//
+//unsigned int bits(unsigned int *pn, int WIDTH)
+//{
+//	for (int pos = WIDTH - 1; pos >= 0; pos--) {
+//		if (pn[pos]) {
+//			for (int nbits = 31; nbits > 0; nbits--) {
+//				if (pn[pos] & 1 << nbits)//妈的傻逼百度百科运算符优先级是错的 位移在与之上
+//					return 32 * pos + nbits + 1;
+//			}
+//			return 32 * pos + 1;
+//		}
+//	}
+//	return 0;
+//}
+//
+//constexpr int constexprfuntest(int x) { return x; }
+//#if 0
+//#ifdef _MSC_VER
+//void printbacktrace(int frames)
+//{
+//	frames > 10 ? frames = 10 : 1;
+//	void* backstack[10];
+//	auto process = GetCurrentProcess();
+//	SymInitialize(process, nullptr, true);
+//	auto stackfm = CaptureStackBackTrace(0, frames, backstack, nullptr);
+//	auto syminfo = (SYMBOL_INFO*)malloc(sizeof(SYMBOL_INFO) + 1024);
+//	syminfo->MaxNameLen = 1024;
+//	syminfo->SizeOfStruct = sizeof(SYMBOL_INFO);
+//	DWORD disp;
+//	auto line = (IMAGEHLP_LINE64*)malloc(sizeof(IMAGEHLP_LINE64));
+//	line->SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+//	for (int i = 0; i < stackfm; i++)
+//	{
+//		DWORD64 stkadd = (DWORD64)backstack[i];
+//		if (SymFromAddr(process, stkadd, 0, syminfo))
+//		{
+//			if(SymGetLineFromAddr64(process, stkadd, &disp, line))
+//			{
+//				printf("\tat %s in %s: line: %lu: address: 0x%0X\n", 
+//					syminfo->Name, line->FileName, line->LineNumber, syminfo->Address);
+//			}
+//			else
+//			{
+//				printf("\tSymGetLineFromAddr64 returned error code %lu.\n", GetLastError());
+//				printf("\tat %s, address 0x%0X.\n", syminfo->Name, syminfo->Address);
+//			}
+//		}
+//		else
+//		{
+//			DWORD err = GetLastError();
+//			cout << "stack[" << i << "] err" << endl;
+//			break;
+//		}
+//	}
+//}
+//#endif
+//#endif
+//vector<string> names;
+//template <typename T>
+//void universereftest(T&& name)
+//{
+//	names.emplace_back(forward<T>(name));
+//}
+//void universereftest(int idx)//如果调用时传入的入参是short类型，重载决议会决定调用万能引用的函数版本，结果int转string出问题，编译出错
+//{
+//	return;
+//}
+////解决方案 标签分派
+//template <typename T>
+//void unvreftestimp(T&& name, false_type)//编译阶段无bool型
+//{
+//	names.emplace_back(forward<T>(name));
+//}
+//template <typename T>
+//void unvreftestimp(T&& name, true_type)
+//{
+//	return;
+//}
+//template <typename T>
+//void unvreftest(T&& name)
+//{
+//	return unvreftestimp(forward<T>(name), is_integral<typename remove_reference<T>::type>::value);//如果传入的name是个左值，根据引用坍缩，T是左值引用，所以直接is_integral<T>, 返回的是false_type
+//}
+//
+////一个防止编译器总是重载决议使用万能引用类型T的构造函数版本而引发问题的修改方案
+//string namefromid(int idx)
+//{
+//	return string("test");
+//}
+//class Person
+//{
+//public:
+//	template<typename T,
+//		typename = typename enable_if<!is_base_of<Person, typename decay<T>::type>::value &&
+//									  !is_integral<typename remove_reference<T>::type>::value>::type>
+//		explicit Person(T&& n):name(forward<T>(n)){}
+//	explicit Person(int idx):name(namefromid(idx)){}
+//private:
+//	string name;
+//};
+//
+//class staticmemtest
+//{
+//public:
+//	const static int value = 1;
+//};
+////int staticmemtest::value = 1;
+//void staticmemfuntest(int i){}
+//template <typename T>
+//void fwd(T&& arg)
+//{
+//	staticmemfuntest(forward<T>(arg));
+//}
+//vector<function<int(int)>> filters;
+//class lambdatest
+//{
+//public:
+//	lambdatest() { div = 4; }
+//	void addfilter()
+//	{
+//		filters.emplace_back([=](int val) {return val % div; });
+//	}
+//private:
+//	int div;
+//};
+//
+//void PrintAandB(string A, string B)
+//{
+//	cout << A << B << endl;
+//}
+//string PringStr(string A)
+//{
+//	cout << A << endl;
+//	return A;
+//}
+//int main()
+//{
+//	doOperation<add1>();
+//	doOperation2(add1);
+//	Testusingfun2 t2 = add1;
+//	//doOperation<t2>();//You cannot use the name or address of a local variable as a template argument
+//	doOperationClass<add1> object1;
+//	object1(1);
+//	list<int> ll{0,1,1,2,3,4,5};
+//	vector<int> vv{ 0,1,2,2,3,4,5 };
+//	list<int>::iterator it1;
+//	vector<int>::iterator it2;
+//	for (it1 = ll.begin(); it1 != ll.end();)
+//	{
+//		if (*it1 == 1)
+//		{
+//			it1 = ll.erase(it1);
+//		}
+//		else
+//			it1++;
+//	}
+//	for (it2 = vv.begin(); it2 != vv.end();)
+//	{
+//		if (*it2 == 2)
+//		{
+//			it2 = vv.erase(it2);
+//		}
+//		else
+//			it2++;
+//	}
+//	function<Testusingfun> testfunctional = add1;
+//	int m = returntestfun<int>(2);
+//
+//	//time_std_function<std::function<void(float)>>(argc, "std::function");
+//	//time_std_function<func::function<void(float)>>(argc, "func::function");
+//	//func::function<void(int)> testmyfunc;
+//	//testmyfunc = add1;
+//
+//	std::function<int(int)> fff = [](int a) {return a; };
+//	PrintType<function_traits<std::function<int(int)>>::function_type>(); //将输出int __cdecl(int)
+//	PrintType<function_traits<std::function<int(int)>>::args<0>::type>();//将输出int
+//	PrintType<function_traits<decltype(fff)>::function_type>();//将输出int __cdecl(int)
+//	commfuntest<int>();//在定义模板特例之前必须已经有模板通例（primary template）的声明；
+//	cout << IndexOf<int, char, short, double, float, int>::value << endl;
+//
+//	Derived<aTMP<int>> a(10);
+//	a.df1(); a.df2(); a.df3(); a.df4();
+//	cout << PASTE("asd", "zxc") << endl;
+//	int x = 10;
+//	const int ax = x;
+//	const int& bx = x;
+//	funtestconst(ax);
+//	funtestconst(bx);
+//	//funtestconst(move(x)); //err 右值无法绑定到左值引用
+//	//funtestconst2(ax); //err
+//	//funtestconst2(bx); //err
+//	vector<int> veci = { 0, 1, 2, 3, 4, 5 };
+//	autotemplatededuce(veci, 5) = 10;
+//	auto s = autotemplatededuce(makeintvec(), 0);
+//	auto ss = autotemplatededuce(move(veci), 5);//为啥这个右值可以绑定到左值引用
+//	ranl(std::move(veci));//msc_ver忽略了move??
+//
+//	unordered_map<string, string> u = {
+//	{ "RED","#FF0000" },
+//	{ "GREEN","#00FF00" },
+//	{ "BLUE","#0000FF" }
+//	};
+//
+//	for (auto& n : u) 
+//	{
+//		cout << typeid(n.first).name() << endl;//由于我们不能改变一个元素的关键字，因此这些pair的关键字部分是const的;用boost查看
+//		//cout << type_id_with_cvr<decltype(n.first)>().pretty_name() << endl;
+//	}
+//	
+//	randlmemfuntest rlt;
+//	rlt.testrlfun();
+//	shellfun(move(rlt));
+//
+//	unsigned int pn[4] = { 4294967294, 268435454, 65535, 0 };
+//	int _what_ = bits(pn, 4);
+//	int _x = 5;
+//	std::array<int, constexprfuntest(5)> arr;
+//	x = constexprfuntest(x);
+//	//int _y = 0;
+//	//cin >> _y;
+//	//_y = constexprfuntest(_y);
+//
+//	cpp11impltest impltest;
+//	Person p1(1);
+//	Person p2("asd");
+//	auto p3(p1);
+//	auto p = &(staticmemtest::value);
+//	fwd(staticmemtest::value);//msc_ver没有报错
+//
+//	{
+//		unique_ptr<BaseCs> ub = make_unique<DeprivedCs>();
+//		unique_ptr<BaseCs> ub2(new DeprivedCs());
+//	}
+//	{
+//		auto lbd = make_unique<lambdatest>();
+//		lbd->addfilter();
+//	}
+//	auto res = filters[0](7);
+//
+//	vector<int> lbdv;
+//	lbdv.push_back(11);
+//	auto funclbdv = bind([](const vector<int>& data) {cout << data[0] << endl; }, move(lbdv));
+//	funclbdv();
+//
+//	auto bindtest = bind(PrintAandB, bind(PringStr, _1), bind(PringStr, _2));
+//	bindtest("fuck", " you");
+//
+//	Handle<MyObj> myobjptr;
+//	{
+//		myobjptr = new MyObj();
+//	}
+//
+//	return 0;
+//}
 
-void funtestconst2(int& param){}
-
-template<typename Container, typename Index>
-auto autotemplatededuce(Container &c, Index i)->decltype(c[i])
-{
-	return c[i];
-}
-template<typename Container>
-void ranl(Container &c)
-{
-	//cout << type_id_with_cvr<Container>().pretty_name() << endl;
-}
-vector<int> makeintvec()
-{
-	vector<int> veci = { 10 };
-	return veci;
-}
-class randlmemfuntest
-{
-public:
-	randlmemfuntest()
-	{
-		cout << "this is constructor" << endl;
-	}
-	void testrlfun() &
-	{
-		cout << "this is l fun" << endl;
-	}
-	void testrlfun() &&
-	{
-		cout << "this is r fun" << endl;
-	}
-};
-void shellfun(randlmemfuntest&& rl) { forward<randlmemfuntest>(rl).testrlfun(); return; }
-
-unsigned int bits(unsigned int *pn, int WIDTH)
-{
-	for (int pos = WIDTH - 1; pos >= 0; pos--) {
-		if (pn[pos]) {
-			for (int nbits = 31; nbits > 0; nbits--) {
-				if (pn[pos] & 1 << nbits)//妈的傻逼百度百科运算符优先级是错的 位移在与之上
-					return 32 * pos + nbits + 1;
-			}
-			return 32 * pos + 1;
-		}
-	}
-	return 0;
-}
-
-constexpr int constexprfuntest(int x) { return x; }
-#if 0
-#ifdef _MSC_VER
-void printbacktrace(int frames)
-{
-	frames > 10 ? frames = 10 : 1;
-	void* backstack[10];
-	auto process = GetCurrentProcess();
-	SymInitialize(process, nullptr, true);
-	auto stackfm = CaptureStackBackTrace(0, frames, backstack, nullptr);
-	auto syminfo = (SYMBOL_INFO*)malloc(sizeof(SYMBOL_INFO) + 1024);
-	syminfo->MaxNameLen = 1024;
-	syminfo->SizeOfStruct = sizeof(SYMBOL_INFO);
-	DWORD disp;
-	auto line = (IMAGEHLP_LINE64*)malloc(sizeof(IMAGEHLP_LINE64));
-	line->SizeOfStruct = sizeof(IMAGEHLP_LINE64);
-	for (int i = 0; i < stackfm; i++)
-	{
-		DWORD64 stkadd = (DWORD64)backstack[i];
-		if (SymFromAddr(process, stkadd, 0, syminfo))
-		{
-			if(SymGetLineFromAddr64(process, stkadd, &disp, line))
-			{
-				printf("\tat %s in %s: line: %lu: address: 0x%0X\n", 
-					syminfo->Name, line->FileName, line->LineNumber, syminfo->Address);
-			}
-			else
-			{
-				printf("\tSymGetLineFromAddr64 returned error code %lu.\n", GetLastError());
-				printf("\tat %s, address 0x%0X.\n", syminfo->Name, syminfo->Address);
-			}
-		}
-		else
-		{
-			DWORD err = GetLastError();
-			cout << "stack[" << i << "] err" << endl;
-			break;
-		}
-	}
-}
-#endif
-#endif
-vector<string> names;
-template <typename T>
-void universereftest(T&& name)
-{
-	names.emplace_back(forward<T>(name));
-}
-void universereftest(int idx)//如果调用时传入的入参是short类型，重载决议会决定调用万能引用的函数版本，结果int转string出问题，编译出错
-{
-	return;
-}
-//解决方案 标签分派
-template <typename T>
-void unvreftestimp(T&& name, false_type)//编译阶段无bool型
-{
-	names.emplace_back(forward<T>(name));
-}
-template <typename T>
-void unvreftestimp(T&& name, true_type)
-{
-	return;
-}
-template <typename T>
-void unvreftest(T&& name)
-{
-	return unvreftestimp(forward<T>(name), is_integral<typename remove_reference<T>::type>::value);//如果传入的name是个左值，根据引用坍缩，T是左值引用，所以直接is_integral<T>, 返回的是false_type
-}
-
-//一个防止编译器总是重载决议使用万能引用类型T的构造函数版本而引发问题的修改方案
-string namefromid(int idx)
-{
-	return string("test");
-}
-class Person
-{
-public:
-	template<typename T,
-		typename = typename enable_if<!is_base_of<Person, typename decay<T>::type>::value &&
-									  !is_integral<typename remove_reference<T>::type>::value>::type>
-		explicit Person(T&& n):name(forward<T>(n)){}
-	explicit Person(int idx):name(namefromid(idx)){}
-private:
-	string name;
-};
-
-class staticmemtest
-{
-public:
-	const static int value = 1;
-};
-//int staticmemtest::value = 1;
-void staticmemfuntest(int i){}
-template <typename T>
-void fwd(T&& arg)
-{
-	staticmemfuntest(forward<T>(arg));
-}
-vector<function<int(int)>> filters;
-class lambdatest
-{
-public:
-	lambdatest() { div = 4; }
-	void addfilter()
-	{
-		filters.emplace_back([=](int val) {return val % div; });
-	}
-private:
-	int div;
-};
-
-void PrintAandB(string A, string B)
-{
-	cout << A << B << endl;
-}
-string PringStr(string A)
-{
-	cout << A << endl;
-	return A;
-}
 int main()
 {
-	doOperation<add1>();
-	doOperation2(add1);
-	Testusingfun2 t2 = add1;
-	//doOperation<t2>();//You cannot use the name or address of a local variable as a template argument
-	doOperationClass<add1> object1;
-	object1(1);
-	list<int> ll{0,1,1,2,3,4,5};
-	vector<int> vv{ 0,1,2,2,3,4,5 };
-	list<int>::iterator it1;
-	vector<int>::iterator it2;
-	for (it1 = ll.begin(); it1 != ll.end();)
-	{
-		if (*it1 == 1)
-		{
-			it1 = ll.erase(it1);
-		}
-		else
-			it1++;
-	}
-	for (it2 = vv.begin(); it2 != vv.end();)
-	{
-		if (*it2 == 2)
-		{
-			it2 = vv.erase(it2);
-		}
-		else
-			it2++;
-	}
-	function<Testusingfun> testfunctional = add1;
-	int m = returntestfun<int>(2);
-
-	//time_std_function<std::function<void(float)>>(argc, "std::function");
-	//time_std_function<func::function<void(float)>>(argc, "func::function");
-	//func::function<void(int)> testmyfunc;
-	//testmyfunc = add1;
-
-	std::function<int(int)> fff = [](int a) {return a; };
-	PrintType<function_traits<std::function<int(int)>>::function_type>(); //将输出int __cdecl(int)
-	PrintType<function_traits<std::function<int(int)>>::args<0>::type>();//将输出int
-	PrintType<function_traits<decltype(fff)>::function_type>();//将输出int __cdecl(int)
-	commfuntest<int>();//在定义模板特例之前必须已经有模板通例（primary template）的声明；
-	cout << IndexOf<int, char, short, double, float, int>::value << endl;
-
-	Derived<aTMP<int>> a(10);
-	a.df1(); a.df2(); a.df3(); a.df4();
-	cout << PASTE("asd", "zxc") << endl;
-	int x = 10;
-	const int ax = x;
-	const int& bx = x;
-	funtestconst(ax);
-	funtestconst(bx);
-	//funtestconst(move(x)); //err 右值无法绑定到左值引用
-	//funtestconst2(ax); //err
-	//funtestconst2(bx); //err
-	vector<int> veci = { 0, 1, 2, 3, 4, 5 };
-	autotemplatededuce(veci, 5) = 10;
-	auto s = autotemplatededuce(makeintvec(), 0);
-	auto ss = autotemplatededuce(move(veci), 5);//为啥这个右值可以绑定到左值引用
-	ranl(std::move(veci));//msc_ver忽略了move??
-
-	unordered_map<string, string> u = {
-	{ "RED","#FF0000" },
-	{ "GREEN","#00FF00" },
-	{ "BLUE","#0000FF" }
-	};
-
-	for (auto& n : u) 
-	{
-		cout << typeid(n.first).name() << endl;//由于我们不能改变一个元素的关键字，因此这些pair的关键字部分是const的;用boost查看
-		//cout << type_id_with_cvr<decltype(n.first)>().pretty_name() << endl;
-	}
-	
-	randlmemfuntest rlt;
-	rlt.testrlfun();
-	shellfun(move(rlt));
-
-	unsigned int pn[4] = { 4294967294, 268435454, 65535, 0 };
-	int _what_ = bits(pn, 4);
-	int _x = 5;
-	std::array<int, constexprfuntest(5)> arr;
-	x = constexprfuntest(x);
-	//int _y = 0;
-	//cin >> _y;
-	//_y = constexprfuntest(_y);
-
-	cpp11impltest impltest;
-	Person p1(1);
-	Person p2("asd");
-	auto p3(p1);
-	auto p = &(staticmemtest::value);
-	fwd(staticmemtest::value);//msc_ver没有报错
-
-	{
-		unique_ptr<BaseCs> ub = make_unique<DeprivedCs>();
-		unique_ptr<BaseCs> ub2(new DeprivedCs());
-	}
-	{
-		auto lbd = make_unique<lambdatest>();
-		lbd->addfilter();
-	}
-	auto res = filters[0](7);
-
-	vector<int> lbdv;
-	lbdv.push_back(11);
-	auto funclbdv = bind([](const vector<int>& data) {cout << data[0] << endl; }, move(lbdv));
-	funclbdv();
-
-	auto bindtest = bind(PrintAandB, bind(PringStr, _1), bind(PringStr, _2));
-	bindtest("fuck", " you");
-
-	Handle<MyObj> myobjptr;
-	{
-		myobjptr = new MyObj();
-	}
-
 	return 0;
 }

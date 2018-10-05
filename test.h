@@ -14,6 +14,7 @@
 #include <dbghelp.h>
 #include <type_traits>
 #include <assert.h>
+#include <algorithm>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -237,3 +238,215 @@ private:
 	int whatever;
 
 };
+
+namespace myLinkUp
+{
+#define defaultcols 10
+#define defaultrows 10
+#define defaulttypes 6
+
+	class LinkUpStage
+	{
+	private:
+		class icon
+		{
+		public:
+			int xpos;
+			int ypos;
+			int type;
+			bool empty; //false ÎÞÍ¼
+			bool operator==(icon tmp)
+			{
+				return this->xpos == tmp.xpos && this->ypos == tmp.ypos;
+			}
+		};
+		int columns;
+		int rows;
+		int types;
+		icon** icons;
+
+	public:
+		LinkUpStage(int col = defaultcols, int row = defaultrows, int tp = defaulttypes)
+			:columns(col),rows(row),types(tp)
+		{}
+		bool setLinkUppara(int col, int row, int tp = defaulttypes)
+		{
+			//validation
+			if (col % 2 && row % 2)
+			{
+				return false;
+			}
+			columns = col;
+			rows = row;
+			types = tp;
+			return true;
+		}
+		void generateLinkUp()
+		{
+			icons = new icon*[rows];
+			for (int i = 0; i < rows; i++)
+			{
+				icons[i] = new icon [columns];
+			}
+
+			vector<int> shuffle_vec;
+			srand(time(nullptr));
+			int tp = 0;
+			for (int i = 0; i < rows * columns; i = i + 2)
+			{
+				tp = rand() % types;
+				shuffle_vec.push_back(tp);
+				shuffle_vec.push_back(tp);
+			}
+			random_shuffle(shuffle_vec.begin(), shuffle_vec.end());
+
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < columns; j++)
+				{
+					icons[i][j] = {i, j, shuffle_vec[i * rows + j], true};
+				}
+			}
+		}
+		~LinkUpStage()
+		{
+			for (int i = 0; i < rows; i++)
+			{
+				delete[] icons[i];
+			}
+			delete icons;
+		}
+
+		bool matchCon(icon a, icon b)
+		{
+			if(a == b || !(a.xpos == b.xpos || a.ypos == b.ypos))
+			{
+				return false;
+			}
+			int min, max;
+			if (a.xpos == b.xpos)
+			{
+				if (a.ypos < b.ypos)
+				{
+					min = a.ypos;
+					max = b.ypos;
+				}
+				else
+				{
+					min = b.ypos;
+					max = a.ypos;
+				}
+				for (min++; min < max; min++)
+				{
+					if (icons[a.xpos][min].empty)
+						return false;
+				}
+			}
+			else
+			{
+				if (a.xpos < b.xpos)
+				{
+					min = a.xpos;
+					max = b.xpos;
+				}
+				else
+				{
+					min = b.xpos;
+					max = a.xpos;
+				}
+				for (min++; min < max; min++)
+				{
+					if (icons[min][a.ypos].empty)
+						return false;
+				}
+			}
+			return true;
+		}
+		bool matchOneCon(icon a, icon b)
+		{
+			if (a.xpos == b.xpos || a.ypos == b.ypos)
+			{
+				return false;
+			}
+			if (!icons[a.xpos][b.ypos].empty && matchCon(a, icons[a.xpos][b.ypos]) && matchCon(icons[a.xpos][b.ypos], b))
+			{
+				return true;
+			}
+			if (!icons[b.xpos][a.ypos].empty && matchCon(a, icons[b.xpos][a.ypos]) && matchCon(icons[b.xpos][a.ypos], b))
+			{
+				return true;
+			}
+			return false;
+		}
+		bool matchTwoCon(icon a, icon b)
+		{
+			for (int i = a.xpos - 1, j = a.ypos; i >= 0; i--)
+			{
+				if (icons[i][j].empty)
+				{
+					break;
+				}
+				if (matchOneCon(icons[i][j], b))
+				{
+					return true;
+				}
+			}
+			for (int i = a.xpos + 1, j = a.ypos; i < columns; i++)
+			{
+				if (icons[i][j].empty)
+				{
+					break;
+				}
+				if (matchOneCon(icons[i][j], b))
+				{
+					return true;
+				}
+			}
+			for (int i = a.xpos, j = a.ypos - 1; j >= 0; j--)
+			{
+				if (icons[i][j].empty)
+				{
+					break;
+				}
+				if (matchOneCon(icons[i][j], b))
+				{
+					return true;
+				}
+			}
+			for (int i = a.xpos, j = a.ypos + 1; j < rows; j++)
+			{
+				if (icons[i][j].empty)
+				{
+					break;
+				}
+				if (matchOneCon(icons[i][j], b))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		bool matchLinkUp(icon a, icon b)
+		{
+			if (a.type != b.type)
+			{
+				return false;
+			}
+
+			if (matchCon(a, b))
+			{
+				return true;
+			}
+			else if (matchOneCon(a, b))
+			{
+				return true;
+			}
+			else if (matchTwoCon(a, b))
+			{
+				return true;
+			}
+
+			return false;
+		}
+	};
+}
