@@ -1014,5 +1014,10 @@
 
 int main()
 {
+	drink* mydrink = new coffee();
+	drink* mysugar = new sugar(*mydrink);
+	drink* myice = new icecream(*mydrink);
+
+	double cost = mydrink->cost();
 	return 0;
 }

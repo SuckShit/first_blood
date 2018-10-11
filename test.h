@@ -1,4 +1,5 @@
 #include <utility>
+#include <algorithm>
 #include <iostream>
 #include <stdlib.h>
 #include <vector>
@@ -14,7 +15,7 @@
 #include <dbghelp.h>
 #include <type_traits>
 #include <assert.h>
-#include <algorithm>
+#include <random>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -290,7 +291,7 @@ namespace myLinkUp
 			}
 
 			vector<int> shuffle_vec;
-			srand(time(nullptr));
+			//srand(time(nullptr));
 			int tp = 0;
 			for (int i = 0; i < rows * columns; i = i + 2)
 			{
@@ -298,7 +299,9 @@ namespace myLinkUp
 				shuffle_vec.push_back(tp);
 				shuffle_vec.push_back(tp);
 			}
-			random_shuffle(shuffle_vec.begin(), shuffle_vec.end());
+			random_device rd;
+			mt19937 gen(rd());
+			shuffle(shuffle_vec.begin(), shuffle_vec.end(), gen);
 
 			for (int i = 0; i < rows; i++)
 			{
@@ -450,3 +453,50 @@ namespace myLinkUp
 		}
 	};
 }
+
+class drink
+{
+public:
+	virtual double cost() { return total; };
+	drink(double price = 0) { cout << "base drink" << endl; this->price = price; this->total = price; }
+	void setprice(double price) { this->price = price; }
+	void settotal(double price) { this->total = price; }
+
+private:
+	double total;
+	double price;
+};
+
+class coffee : public drink
+{
+public:
+	coffee(double price = 0.99) { cout << "coffee" << endl; setprice(price); settotal(price); }
+};
+
+//decorator
+class decorator : public drink
+{
+public:
+	decorator(drink& basedrink, double price = 0.0)
+	{
+		cout << "decorator base" << endl;
+		basedrink.settotal(basedrink.cost() + price);
+	}
+};
+class sugar : public decorator
+{
+public:
+	sugar(drink& basedrink,double price = 0.14):decorator(basedrink, price)
+	{
+		cout << "decorator sugar" << endl; 
+	}
+};
+
+class icecream : public decorator
+{
+public:
+	icecream(drink& basedrink, double price = 0.25):decorator(basedrink, price)
+	{
+		cout << "decorator icecream" << endl;
+	}
+};
