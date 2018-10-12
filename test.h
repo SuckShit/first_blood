@@ -500,3 +500,16 @@ public:
 		cout << "decorator icecream" << endl;
 	}
 };
+
+template<typename T>
+struct S {
+	template<typename U> void foo() {}
+};
+
+template<typename T>
+void bar()
+{
+	S<T> s;
+	s.foo<T>(); // 尼玛 神奇的vs又可以编过
+	s.template foo<T>(); // OK
+}

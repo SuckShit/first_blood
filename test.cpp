@@ -1019,5 +1019,6 @@ int main()
 	drink* myice = new icecream(*mydrink);
 
 	double cost = mydrink->cost();
+	bar<int>();
 	return 0;
 }
