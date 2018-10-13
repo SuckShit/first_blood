@@ -1,4 +1,4 @@
-#include <utility>
+﻿#include <utility>
 #include <algorithm>
 #include <iostream>
 #include <stdlib.h>
@@ -16,6 +16,8 @@
 #include <type_traits>
 #include <assert.h>
 #include <random>
+#include <locale>
+#include <tchar.h>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -255,7 +257,7 @@ namespace myLinkUp
 			int xpos;
 			int ypos;
 			int type;
-			bool empty; //false ��ͼ
+			bool empty; //false 无图
 			bool operator==(icon tmp)
 			{
 				return this->xpos == tmp.xpos && this->ypos == tmp.ypos;
@@ -500,3 +502,199 @@ public:
 		cout << "decorator icecream" << endl;
 	}
 };
+
+namespace myrpggame
+{
+#define DEFAUTL_HEIGHT 20
+#define DEFAUTL_LENGTH 20
+#define DEFAULT_IMG	   "_"
+#define DEFAULT_CHA    "|"
+	template <typename T>
+	class GameMap
+	{
+	private:
+		int length;
+		int height;
+		T** object;
+		static mutex staticmutex;
+		static GameMap* instance;
+		GameMap() = delete;
+		GameMap(int x , int y) :
+			length(x), height(y)
+		{
+			object = new T*[height];
+			for (int i = 0; i < height; i++)
+			{
+				object[i] = new T[length];
+			}
+		}
+	public:
+		static GameMap* getInstance(int x = DEFAUTL_LENGTH, int y = DEFAUTL_HEIGHT)
+		{
+			if (instance == nullptr)
+			{
+				lock_guard<mutex> lock(staticmutex);
+				if (instance == nullptr)
+				{
+					instance = new GameMap(x, y);
+				}
+			}
+			return instance;
+		}
+		void destroy()
+		{
+			for (int i = 0; i < height; i++)
+			{
+				delete[] object[i];
+				object[i] = nullptr;
+			}
+			delete[] object;
+			object = nullptr;
+
+			delete instance;
+			instance = nullptr;
+		}
+		int drawmap()
+		{
+			system("cls");
+			for (int i = 0; i < length; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					object[i][j].loadimg();
+				}
+				cout << endl;
+			}
+			cout << endl;
+			return 0;
+		}
+		int init()
+		{
+			int ret = drawmap();
+			//and so on for the future
+			return ret;
+		}
+		int getheight() { return height; }
+		int getlength() { return length; }
+		void drawpos(string pos, int x, int y)
+		{
+			system("cls");
+			for (int i = 0; i < length; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					if (i == x && j == y)
+					{
+						cout << pos;
+					}
+					else
+					{
+						object[i][j].loadimg();
+					}					
+				}
+				cout << endl;
+			}
+			cout << endl;
+		}
+	};
+
+	class Terrain
+	{
+	private:
+		string image;
+	public:
+		Terrain(string img = DEFAULT_IMG):image(img)
+		{}
+		void setimg(string img)
+		{
+			image = img;
+		}
+		void loadimg()
+		{
+			cout << image;
+		}
+	};
+
+	class Character
+	{
+	private:
+		int xpos;
+		int ypos;
+		GameMap<Terrain>* pInstance;
+		string characimg;
+	public:
+		Character(GameMap<Terrain>* pinst, int x = 0, int y = 0, string img = DEFAULT_CHA):pInstance(pinst), characimg(img)
+		{
+			if (!ValidatePos(x, y))
+			{
+				xpos = 0;
+				ypos = 0;
+			}
+			xpos = x;
+			ypos = y;
+			pInstance->drawpos(characimg, xpos, ypos);
+		}
+		int ValidatePos(int x, int y)
+		{
+			return pInstance->getheight() > y && pInstance->getlength() > x
+				&& x >= 0 && y >= 0;
+		}
+		void StartMove()
+		{
+			HANDLE hd = GetStdHandle(STD_INPUT_HANDLE);
+			DWORD mode;
+
+			char c;
+			while (1)
+			{
+				GetConsoleMode(hd, &mode);
+				SetConsoleMode(hd, mode&~ENABLE_ECHO_INPUT&ENABLE_QUICK_EDIT_MODE);
+
+				cin.get(c);
+				switch (c)
+				{
+				case 'q':
+				case 'Q':
+					cout << "Game over" << endl;
+					return;
+				case 'a':
+				case 'A':
+					if (ValidatePos(xpos, ypos - 1))
+					{
+						ypos--;
+						pInstance->drawpos(characimg, xpos, ypos);
+					}
+					break;
+				case 'd':
+				case 'D':
+					if (ValidatePos(xpos, ypos + 1))
+					{
+						ypos++;
+						pInstance->drawpos(characimg, xpos, ypos);
+					}
+					break;
+				case 'w':
+				case 'W':
+					if (ValidatePos(xpos - 1, ypos))
+					{
+						xpos--;
+						pInstance->drawpos(characimg, xpos, ypos);
+					}
+					break;
+				case 's':
+				case 'S':
+					if (ValidatePos(xpos + 1, ypos))
+					{
+						xpos++;
+						pInstance->drawpos(characimg, xpos, ypos);
+					}
+					break;
+				}
+				cin.clear();
+			}
+		}
+	};
+
+	mutex GameMap<Terrain>::staticmutex;
+	GameMap<Terrain>* GameMap<Terrain>::instance;
+}
