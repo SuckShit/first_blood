@@ -1011,14 +1011,28 @@
 //
 //	return 0;
 //}
-
+using namespace myrpggame;
 int main()
 {
-	drink* mydrink = new coffee();
-	drink* mysugar = new sugar(*mydrink);
-	drink* myice = new icecream(*mydrink);
-
-	double cost = mydrink->cost();
+	//drink* mydrink = new coffee();
+	//drink* mysugar = new sugar(*mydrink);
+	//drink* myice = new icecream(*mydrink);
 	bar<int>();
+	//double cost = mydrink->cost();
+	
+	//locale::global(locale(""));
+	//wcout << DEFAULT_IMG << endl;
+	//char c;
+	//cin.get(c);
+	myrpggame::GameMap<myrpggame::Terrain>* instance = myrpggame::GameMap<myrpggame::Terrain>::getInstance();
+	instance->init();
+	myrpggame::Character* charac = new myrpggame::Character(instance);
+	charac->StartMove();
+	if (charac)
+	{
+		delete charac;
+		charac = nullptr;
+	}
+	instance->destroy();
 	return 0;
 }
