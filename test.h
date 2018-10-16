@@ -11,6 +11,7 @@
 #include <functional>
 #include <list>
 #include <unordered_map>
+#include <unordered_set>
 #include <array>
 #include <dbghelp.h>
 #include <type_traits>
@@ -18,6 +19,7 @@
 #include <random>
 #include <locale>
 #include <tchar.h>
+#include <stdexcept>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -710,3 +712,24 @@ namespace myrpggame
 	mutex GameMap<Terrain>::staticmutex;
 	GameMap<Terrain>* GameMap<Terrain>::instance;
 }
+
+class hash_test
+{
+public:
+	int hash_key;
+	bool operator==(const hash_test& hs)
+	{
+		return hash_key == hs.hash_key;
+	}
+};
+bool operator==(const hash_test& lhs, const hash_test& rhs) {
+	return lhs.hash_key == rhs.hash_key;
+}
+struct my_hash
+{
+	size_t operator()(hash_test const& hs) const
+	{
+		return hash<int>()(hs.hash_key);
+	}
+};
+

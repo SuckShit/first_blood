@@ -1034,5 +1034,19 @@ int main()
 		charac = nullptr;
 	}
 	instance->destroy();
+	hash_test htt{1};
+	unordered_set<hash_test, my_hash> us = { htt, {2}, {3} };
+	for (auto& s : us)
+		std::cout << s.hash_key << '\n';
+
+	try
+	{
+		throw std::exception("fuck");
+	}
+	catch (std::exception e)
+	{
+		cout << e.what();
+	}
+
 	return 0;
 }
