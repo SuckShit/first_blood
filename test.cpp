@@ -1011,42 +1011,58 @@
 //
 //	return 0;
 //}
+void threadfun(moveornottest& mt)
+{
+	return;
+}
 using namespace myrpggame;
 int main()
 {
 	//drink* mydrink = new coffee();
 	//drink* mysugar = new sugar(*mydrink);
 	//drink* myice = new icecream(*mydrink);
-	bar<int>();
+	//bar<int>();
 	//double cost = mydrink->cost();
 	
 	//locale::global(locale(""));
 	//wcout << DEFAULT_IMG << endl;
 	//char c;
 	//cin.get(c);
-	myrpggame::GameMap<myrpggame::Terrain>* instance = myrpggame::GameMap<myrpggame::Terrain>::getInstance();
-	instance->init();
-	myrpggame::Character* charac = new myrpggame::Character(instance);
-	charac->StartMove();
-	if (charac)
-	{
-		delete charac;
-		charac = nullptr;
-	}
-	instance->destroy();
+	//myrpggame::GameMap<myrpggame::Terrain>* instance = myrpggame::GameMap<myrpggame::Terrain>::getInstance();
+	//instance->init();
+	//myrpggame::Character* charac = new myrpggame::Character(instance);
+	//charac->StartMove();
+	//if (charac)
+	//{
+	//	delete charac;
+	//	charac = nullptr;
+	//}
+	//instance->destroy();
 	hash_test htt{1};
 	unordered_set<hash_test, my_hash> us = { htt, {2}, {3} };
 	for (auto& s : us)
 		std::cout << s.hash_key << '\n';
 
-	try
-	{
-		throw std::exception("fuck");
-	}
-	catch (std::exception e)
-	{
-		cout << e.what();
-	}
-
+	//try
+	//{
+	//	throw std::exception("fuck");
+	//}
+	//catch (std::exception e)
+	//{
+	//	cout << e.what();
+	//}
+	moveornottest mt1;
+	moveornottest& mt2 = mt1;
+	//tuple<moveornottest> asd = make_tuple(mt1);
+	//refornottestfun(mt2);
+	//auto t1 = copycontest(mt1);
+	//auto t2 = movecontest(mt1);
+	auto fwd = forward<moveornottest>(ref(mt1));
+	thread thread1(threadfun, mt1);
+	thread1.join();
+	
+	using type1 = remove_cv<const int* const>::type;
+	cout << is_same<const int*, type1>::value << endl;
+	doPrint(cout, 35, "ddd", 1.2);
 	return 0;
 }

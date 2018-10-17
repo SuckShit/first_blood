@@ -733,3 +733,55 @@ struct my_hash
 	}
 };
 
+class moveornottest
+{
+public:
+	moveornottest() = default;
+	moveornottest(const moveornottest& mt)// = delete;
+#if 1
+	{
+		cout << "moveornottest copy con" << endl;
+	}
+#endif
+	moveornottest& operator=(const moveornottest& mt) = default;
+	~moveornottest() = default;
+	moveornottest(moveornottest&& mt)// = delete;
+#if 1
+	{
+		cout << "moveornottest move con" << endl;
+	}
+#endif
+	void set(int x) { what = x; }
+private:
+	int what;
+};
+template<typename T>
+T& refornottestfun(T&& x)
+{
+	auto at = forward<T>(x);
+	return at;
+}
+
+template<typename T>
+T& copycontest(T t)
+{
+	t.set(10);
+	return t;
+}
+
+template<typename T>
+T movecontest(T t)
+{
+	t.set(11);
+	return t;
+}
+
+template <typename Arg, typename... Args>
+void doPrint(std::ostream& out, Arg&& arg, Args&&... args)
+{
+	out << forward<Arg>(arg);
+	using expander = int[];
+	(void)expander {
+		0, (void(out << ',' << std::forward<Args>(args)), 0)...
+	};
+}
