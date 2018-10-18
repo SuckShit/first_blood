@@ -1055,14 +1055,16 @@ int main()
 	moveornottest& mt2 = mt1;
 	//tuple<moveornottest> asd = make_tuple(mt1);
 	//refornottestfun(mt2);
-	//auto t1 = copycontest(mt1);
-	//auto t2 = movecontest(mt1);
+	auto t1 = copycontest(mt1);
+	auto t2 = movecontest(mt1);
 	auto fwd = forward<moveornottest>(ref(mt1));
-	thread thread1(threadfun, mt1);
+	thread thread1(threadfun, move(mt1));
 	thread1.join();
 	
 	using type1 = remove_cv<const int* const>::type;
 	cout << is_same<const int*, type1>::value << endl;
 	doPrint(cout, 35, "ddd", 1.2);
+	cout << endl;
+	tupletest(8, "ddd", mt1);
 	return 0;
 }

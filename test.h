@@ -777,11 +777,25 @@ T movecontest(T t)
 }
 
 template <typename Arg, typename... Args>
-void doPrint(std::ostream& out, Arg&& arg, Args&&... args)
+void doPrint(std::ostream& out, Arg&& arg, Args&&... args)//a holy fucking shit code
 {
 	out << forward<Arg>(arg);
 	using expander = int[];
 	(void)expander {
 		0, (void(out << ',' << std::forward<Args>(args)), 0)...
 	};
+}
+
+template < typename... Rest >
+void doSomething(Rest&&... rest)
+{
+	using expander = int[];
+	(void)expander {
+		0, (void(cout << typeid(rest).name()), 0)...
+	};
+}
+template <typename T, typename... Rest>
+void tupletest(T&& t, Rest&&... rest)
+{
+	doSomething(tuple<decay_t<T>, decay_t<Rest>...>(forward<T>(t), forward<Rest>(rest)...));
 }
