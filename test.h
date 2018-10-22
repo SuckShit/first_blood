@@ -799,3 +799,20 @@ void tupletest(T&& t, Rest&&... rest)
 {
 	doSomething(tuple<decay_t<T>, decay_t<Rest>...>(forward<T>(t), forward<Rest>(rest)...));
 }
+
+template <typename T>
+class TempTest
+{
+public:
+	TempTest(T t):tt(t) 
+	{
+		cout << "use T" << endl;
+	}
+	template<typename U>
+	TempTest(U u):tt(u)
+	{
+		cout << "use U" << endl;
+	}
+private:
+	T tt;
+};

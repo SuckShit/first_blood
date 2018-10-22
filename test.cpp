@@ -1066,5 +1066,8 @@ int main()
 	doPrint(cout, 35, "ddd", 1.2);
 	cout << endl;
 	tupletest(8, "ddd", mt1);
+	cout << endl;
+	TempTest tt(1);				//use T
+	TempTest<double> tt2(2);	//use U
 	return 0;
 }
