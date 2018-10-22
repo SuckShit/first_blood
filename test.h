@@ -20,6 +20,7 @@
 #include <locale>
 #include <tchar.h>
 #include <stdexcept>
+#include <map>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;

@@ -1069,5 +1069,19 @@ int main()
 	cout << endl;
 	TempTest tt(1);				//use T
 	TempTest<double> tt2(2);	//use U
+
+	//map<int, int> intmap;
+	//intmap.insert(make_pair<int, int>(1, 1));
+	//cout << intmap.size() << endl;
+	//intmap.clear();
+	//cout << intmap.size() << endl;
+
+	//vector<int> intvec;
+	//intvec.push_back(1);
+	//int x = intvec.capacity();
+	//intvec.clear();
+	//x = intvec.capacity();
+	//vector<int>().swap(intvec);
+	//x = intvec.capacity();
 	return 0;
 }
