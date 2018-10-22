@@ -784,6 +784,10 @@ void doPrint(std::ostream& out, Arg&& arg, Args&&... args)//a holy fucking shit 
 	using expander = int[];
 	(void)expander {
 		0, (void(out << ',' << std::forward<Args>(args)), 0)...
+	//  |     |                                          |
+	//  |     |                                逗号表达式，返回后面一个0，因为是int数组
+    //  |  防止内部返回类型重载了逗号操作符
+	//防止参数包为空导致int[0]
 	};
 }
 
