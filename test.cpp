@@ -1067,7 +1067,7 @@ int main()
 	cout << endl;
 	tupletest(8, "ddd", mt1);
 	cout << endl;
-	TempTest tt(1);				//use T
+	TempTest<int> tt(1);				//use T
 	TempTest<double> tt2(2);	//use U
 
 	//map<int, int> intmap;
@@ -1083,5 +1083,11 @@ int main()
 	//x = intvec.capacity();
 	//vector<int>().swap(intvec);
 	//x = intvec.capacity();
+	vector<BaseCs*>* intpvec = new vector<BaseCs *>;
+	BaseCs* bcs = new BaseCs;
+	delete bcs;
+	intpvec->push_back(new BaseCs);
+	delete (*intpvec)[0];
+	vector<BaseCs*>().swap(*intpvec);//清空vector 包含的对象泄露
 	return 0;
 }
