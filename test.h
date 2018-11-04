@@ -821,3 +821,51 @@ public:
 private:
 	T tt;
 };
+
+class Basesingle
+{
+public:
+	static Basesingle* Getinstance()
+	{
+		if (instance == nullptr)
+		{
+			lock_guard<mutex> lock(staticmutex);
+			if (instance == nullptr)
+			{
+				instance = new Basesingle;
+			}
+		}
+		return instance;
+	}
+
+private:
+	Basesingle() = default;
+	static Basesingle * instance;
+	static mutex staticmutex;
+};
+mutex Basesingle::staticmutex;
+Basesingle* Basesingle::instance = nullptr;
+
+class Derivesingle : public Basesingle
+{
+public:
+	Derivesingle() = default;
+};
+
+class virtualtest
+{
+public:
+	virtualtest(int i):val(i){}
+	virtual void whatever() { cout << "base" << endl; }
+private:
+	int val;
+};
+class  derivevirtual : public virtualtest
+{
+public:
+	derivevirtual() :virtualtest(1) {}
+	virtual void whatever() { cout << "derive" << endl; }
+	void get() { return; }
+private:
+
+};

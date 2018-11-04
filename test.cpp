@@ -1089,5 +1089,9 @@ int main()
 	intpvec->push_back(new BaseCs);
 	delete (*intpvec)[0];
 	vector<BaseCs*>().swap(*intpvec);//清空vector 包含的对象泄露
+	Basesingle* p = Basesingle::Getinstance();
+	//Derivesingle* q = new Derivesingle; 可以继承但是无法实例化
+	virtualtest* vp = new derivevirtual;
+	((derivevirtual*)vp)->get();
 	return 0;
 }
