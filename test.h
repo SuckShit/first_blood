@@ -31,13 +31,26 @@ using namespace placeholders;
 class BaseCs
 {
 public:
+	BaseCs() { cout << "Base construction" << endl; }
 	virtual ~BaseCs() { cout << "Base destruction" << endl; }
+	BaseCs(const BaseCs& bc) { *this = bc; cout << "copy construction" << endl; }
 };
 class DeprivedCs:public BaseCs
 {
 public:
 	~DeprivedCs() { cout << "Deprived destruction" << endl; }
 };
+
+void Basefun1(shared_ptr<BaseCs> spbc)
+{
+	cout << "Basefun1 " << spbc.use_count() << endl;
+	return;
+}
+void Basefun2(shared_ptr<BaseCs>& spbc)
+{
+	cout << "Basefun2 " << spbc.use_count() << endl;
+	return;
+}
 
 class BaseObj
 {
@@ -868,4 +881,11 @@ public:
 	void get() { return; }
 private:
 
+};
+#pragma pack(1)
+struct teststruct {
+	uint8_t len; 
+	uint8_t alloc; 
+	unsigned char flags;
+	char buf[];
 };

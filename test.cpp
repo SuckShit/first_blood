@@ -1093,5 +1093,13 @@ int main()
 	//Derivesingle* q = new Derivesingle; 可以继承但是无法实例化
 	virtualtest* vp = new derivevirtual;
 	((derivevirtual*)vp)->get();
+
+	cout << "=====" << sizeof(long) << endl;
+
+	auto ptr = make_shared<BaseCs>();
+	Basefun1(ptr);
+	cout << ptr.use_count() << endl;
+	Basefun2(ptr);
+	cout << ptr.use_count() << endl;
 	return 0;
 }
