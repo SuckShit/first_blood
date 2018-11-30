@@ -1101,5 +1101,19 @@ int main()
 	cout << ptr.use_count() << endl;
 	Basefun2(ptr);
 	cout << ptr.use_count() << endl;
+
+	int* aa = new int(2);
+	int* bb = new int(3);
+	swapaandb(aa, bb);
+	swapaandb2(aa, bb);
+	int aaa = 2;
+	int bbb = 3;
+	swapaandb(&aaa, &bbb);
+	cout << aaa << " " << bbb << endl;
+
+	BaseCs bcs1;
+	DeprivedCs dcs1;
+	DeprivedCs dcs2 = dcs1;
+	BaseCs bcs2 = dcs1;
 	return 0;
 }

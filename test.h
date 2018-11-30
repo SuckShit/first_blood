@@ -33,12 +33,16 @@ class BaseCs
 public:
 	BaseCs() { cout << "Base construction" << endl; }
 	virtual ~BaseCs() { cout << "Base destruction" << endl; }
-	BaseCs(const BaseCs& bc) { *this = bc; cout << "copy construction" << endl; }
+	BaseCs(const BaseCs& bc) { *this = bc; cout << "Base copy construction" << endl; }
+	BaseCs& operator=(const BaseCs& bc) { cout << "Base operator= overload" << endl; if(this != &bc)*this = bc; return *this; }
 };
 class DeprivedCs:public BaseCs
 {
 public:
-	~DeprivedCs() { cout << "Deprived destruction" << endl; }
+	DeprivedCs() { cout << "DeprivedCs construction" << endl; }
+	~DeprivedCs() { cout << "DeprivedCs destruction" << endl; }
+	DeprivedCs(const DeprivedCs& bc) { *this = bc; cout << "DeprivedCs copy construction" << endl; }
+	DeprivedCs& operator=(const DeprivedCs& bc) { cout << "DeprivedCs operator= overload" << endl; if (this != &bc)*this = bc; return *this; }
 };
 
 void Basefun1(shared_ptr<BaseCs> spbc)
@@ -889,3 +893,18 @@ struct teststruct {
 	unsigned char flags;
 	char buf[];
 };
+
+void swapaandb(int* a, int* b)
+{
+	int* tmp = a;
+	a = b;
+	b = tmp;
+}
+
+void swapaandb2(int* a, int* b)
+{
+	int tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
