@@ -33,16 +33,34 @@ class BaseCs
 public:
 	BaseCs() { cout << "Base construction" << endl; }
 	virtual ~BaseCs() { cout << "Base destruction" << endl; }
-	BaseCs(const BaseCs& bc) { *this = bc; cout << "Base copy construction" << endl; }
-	BaseCs& operator=(const BaseCs& bc) { cout << "Base operator= overload" << endl; if(this != &bc)*this = bc; return *this; }
+	BaseCs(const BaseCs& bc) 
+	{ 
+		if (this != &bc)
+			*this = bc;
+		cout << "Base copy construction" << endl; 
+	}
+	BaseCs& operator=(const BaseCs& bc)
+	{ 
+		cout << "Base operator= overload" << endl; 
+		return *this; 
+	}
 };
 class DeprivedCs:public BaseCs
 {
 public:
 	DeprivedCs() { cout << "DeprivedCs construction" << endl; }
 	~DeprivedCs() { cout << "DeprivedCs destruction" << endl; }
-	DeprivedCs(const DeprivedCs& bc) { *this = bc; cout << "DeprivedCs copy construction" << endl; }
-	DeprivedCs& operator=(const DeprivedCs& bc) { cout << "DeprivedCs operator= overload" << endl; if (this != &bc)*this = bc; return *this; }
+	DeprivedCs(const DeprivedCs& bc)
+	{ 
+		if (this != &bc)
+			*this = bc;	
+		cout << "DeprivedCs copy construction" << endl; 
+	}
+	DeprivedCs& operator=(const DeprivedCs& bc) 
+	{ 
+		cout << "DeprivedCs operator= overload" << endl;
+		return *this;
+	}
 };
 
 void Basefun1(shared_ptr<BaseCs> spbc)

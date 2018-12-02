@@ -1115,5 +1115,6 @@ int main()
 	DeprivedCs dcs1;
 	DeprivedCs dcs2 = dcs1;
 	BaseCs bcs2 = dcs1;
+	bcs1 = dcs2;
 	return 0;
 }
