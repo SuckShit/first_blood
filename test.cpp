@@ -1116,5 +1116,37 @@ int main()
 	DeprivedCs dcs2 = dcs1;
 	BaseCs bcs2 = dcs1;
 	bcs1 = dcs2;
+
+	BaseCs* pbcs1 = &dcs1;
+	pbcs1->f();
+
+	using pfun = void(*)();
+	cout << "vbf of BaseCs:" << endl;
+	cout << pbcs1 << ":" << *(int*)pbcs1 << endl;
+	pfun pfunimp = (pfun)(*((int*)(*(int*)pbcs1)+1));
+	pfunimp();
+	pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 2));
+	pfunimp();
+
+	D d1;
+	d1._a = 1;
+	d1._b = 2;
+	d1._c = 3;
+	d1._d = 4;
+	/*   content of &d1 in condition of virtual inheritance*/
+	/*   vbf of B -------------------4byte*/
+	/*   offset of A ----------------4byte*/
+	/*   _b -------------------------4byte*/
+	/*   vbf of C -------------------4byte*/
+	/*   offset of A ----------------4byte*/
+	/*   _c -------------------------4byte*/
+	/*   _d -------------------------4byte*/
+	/*   vbf of A -------------------4byte*/
+	/*   _a -------------------------4byte*/
+
+	thread td1(putter);
+	thread td2(getter);
+	td1.join();
+	td2.join();
 	return 0;
 }

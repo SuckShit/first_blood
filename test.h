@@ -21,6 +21,7 @@
 #include <tchar.h>
 #include <stdexcept>
 #include <map>
+#include <condition_variable>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -44,6 +45,8 @@ public:
 		cout << "Base operator= overload" << endl; 
 		return *this; 
 	}
+	virtual void f() { cout << "this is base f" << endl; }
+	virtual void g() { cout << "this is base g" << endl; }
 };
 class DeprivedCs:public BaseCs
 {
@@ -61,6 +64,8 @@ public:
 		cout << "DeprivedCs operator= overload" << endl;
 		return *this;
 	}
+	virtual void f1() { cout << "this is derived f1" << endl; }
+	virtual void g() { cout << "this is derived g" << endl; }
 };
 
 void Basefun1(shared_ptr<BaseCs> spbc)
@@ -926,3 +931,127 @@ void swapaandb2(int* a, int* b)
 	*b = tmp;
 }
 
+class A
+{
+public:
+	virtual void f1()
+	{
+		cout << "A::f1()" << endl;
+		cout << endl;
+	}
+	virtual void f2()
+	{
+		cout << "A::f2()" << endl;
+		cout << endl;
+	}
+	int _a;
+};
+
+class B :virtual public A
+{
+public:
+	virtual void f1()
+	{
+		cout << "B::f1()" << endl;
+		cout << endl;
+	}
+	virtual void f3()
+	{
+		cout << "B::f3()" << endl;
+		cout << endl;
+	}
+
+	int _b;
+};
+class C :virtual public A
+{
+public:
+	virtual void f1()
+	{
+		cout << "C::f1()" << endl;
+		cout << endl;
+	}
+	virtual void f4()
+	{
+		cout << "C::f4()" << endl;
+		cout << endl;
+	}
+	int _c;
+};
+
+class D :public B, public C
+{
+public:
+	virtual void f1()
+	{
+		cout << "D::f1()" << endl;
+		cout << endl;
+	}
+
+	virtual void f5()
+	{
+		cout << "D::f5()" << endl;
+		cout << endl;
+	}
+
+	int _d;
+};
+
+
+#define SIZE 4
+struct product
+{
+	mutex mtx;
+	condition_variable isfull;
+	condition_variable isempty;
+	int pos;
+	int buf[SIZE];
+};
+struct product pdt;
+
+void put(struct product * t, int data)
+{
+	unique_lock<mutex> lk(t->mtx);
+	while (t->pos + 1 > SIZE - 1)//the  array is full
+	{
+		t->isfull.wait(lk);
+	}
+	t->pos = t->pos + 1;
+	t->buf[t->pos] = data;
+	printf("thread %d put a data %d  to  pos %d\n", GetCurrentThreadId(), data, t->pos);
+	t->isempty.notify_all();
+	lk.unlock();
+}
+
+
+void get(struct product * t)
+{
+	unique_lock<mutex> lk(t->mtx);
+	while (t->pos < 0)//the  array is empty
+	{
+		t->isempty.wait(lk);
+	}
+	printf("thread %d get a data %d  to  pos %d\n", GetCurrentThreadId(), t->buf[t->pos], t->pos);
+	t->pos = t->pos - 1;
+	t->isfull.notify_all();
+	lk.unlock();
+}
+
+
+void putter()
+{
+	int n;
+	for (n = 0; n < 8; n++)
+	{
+		put(&pdt, n);
+	}
+}
+
+void getter()
+{
+	int n;
+	for (n = 0; n < 8; n++)
+	{
+		get(&pdt);
+	}
+}
