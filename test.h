@@ -1055,3 +1055,9 @@ void getter()
 		get(&pdt);
 	}
 }
+
+BaseCs funbacs()
+{
+	BaseCs bcs;
+	return bcs;
+}
