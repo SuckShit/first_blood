@@ -1127,7 +1127,8 @@ int main()
 	pfunimp();
 	pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 2));
 	pfunimp();
-
+	pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 3));
+	pfunimp();
 	D d1;
 	d1._a = 1;
 	d1._b = 2;
