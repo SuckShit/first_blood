@@ -1096,7 +1096,7 @@ int main()
 
 	cout << "=====" << sizeof(long) << endl;
 
-	auto ptr = make_shared<BaseCs>();
+	auto ptr = make_shared<BaseCs>("fuck");
 	shared_ptr<BaseCs> xx;
 	xx = ptr;
 	Basefun1(ptr);

@@ -32,21 +32,72 @@ using namespace placeholders;
 class BaseCs
 {
 public:
-	BaseCs() { cout << "Base construction" << endl; }
-	virtual ~BaseCs() { cout << "Base destruction" << endl; }
+	operator int()
+	{
+		return strlen(m_data);
+	}
+	BaseCs()
+	{ 
+		m_data = new char[1];
+		m_data[0] = '0';
+		cout << "Base construction" << endl;
+	}
+	BaseCs(const char *str)
+	{
+		if (str == NULL) 
+		{
+			m_data = new char[1];
+			m_data[0] = '0';
+		}
+		else 
+		{
+			m_data = new char[strlen(str) + 1];
+			strcpy(m_data, str);
+		}
+	}
+	virtual ~BaseCs() 
+	{ 
+		if (m_data)
+		{
+			delete[] m_data;
+			m_data = nullptr;
+		}
+		cout << "Base destruction" << endl; 
+	}
 	BaseCs(const BaseCs& bc) 
 	{ 
-		if (this != &bc)
-			*this = bc;
+		if (!bc.m_data)
+		{
+			m_data = new char[1];
+			m_data[0] = '0';
+		}
+		else
+		{
+			m_data = new char[int(const_cast<BaseCs*>(&bc)) + 1];
+			strcpy(m_data, bc.m_data);
+		}
 		cout << "Base copy construction" << endl; 
 	}
 	BaseCs& operator=(const BaseCs& bc)
 	{ 
+		if (m_data)
+		{
+			delete[] m_data;
+			m_data = nullptr;
+		}
+		if (this != &bc)
+		{
+			m_data = new char[int(const_cast<BaseCs*>(&bc)) + 1];
+			strcpy(m_data, bc.m_data);
+		}
 		cout << "Base operator= overload" << endl; 
 		return *this; 
 	}
 	virtual void f() { cout << "this is base f" << endl; }
 	virtual void g() { cout << "this is base g" << endl; }
+
+private:
+	char* m_data;
 };
 class DeprivedCs:public BaseCs
 {
@@ -55,8 +106,6 @@ public:
 	~DeprivedCs() { cout << "DeprivedCs destruction" << endl; }
 	DeprivedCs(const DeprivedCs& bc)
 	{ 
-		if (this != &bc)
-			*this = bc;	
 		cout << "DeprivedCs copy construction" << endl; 
 	}
 	DeprivedCs& operator=(const DeprivedCs& bc) 
@@ -797,14 +846,14 @@ private:
 	int what;
 };
 template<typename T>
-T& refornottestfun(T&& x)
+T refornottestfun(T&& x)
 {
 	auto at = forward<T>(x);
 	return at;
 }
 
 template<typename T>
-T& copycontest(T t)
+T copycontest(T t)
 {
 	t.set(10);
 	return t;
