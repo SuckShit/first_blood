@@ -1097,6 +1097,8 @@ int main()
 	cout << "=====" << sizeof(long) << endl;
 
 	auto ptr = make_shared<BaseCs>();
+	shared_ptr<BaseCs> xx;
+	xx = ptr;
 	Basefun1(ptr);
 	cout << ptr.use_count() << endl;
 	Basefun2(ptr);
@@ -1156,5 +1158,8 @@ int main()
 		arr[i] = new int[10];
 	}
 	BaseCs bbcs = funbacs();//草泥马傻逼医科大
+
+	aligned_union_t<1, BaseCs> _storage; 
+	BaseCs* pbcsaln = new(static_cast<void*>(&_storage)) BaseCs;
 	return 0;
 }
