@@ -1055,11 +1055,9 @@ void getter()
 		get(&pdt);
 	}
 }
-//hello everyone. thank you for taking your time. its my honor to have the opp to take part in this intv.
-//now let me introduce myself briefly
-//my name is dkw. i was born in anhui and iam 30 y o. i gra from an u in com s and tec in hf.my major is net en.
-//i got my bach degr after gra.my first job was ,er sorry i dont know the eng name of this comp"kdxf" i worked there for 3 y
-//and i learned a lot.it should be an internet comp so i used a lot of open source tec.my second job was working as a c programmer
-//deveploping route command line in huawei. its a bit like the cmd in dos.the route op sys is similar to linux so i act 
-// and now i work in tata an indian com i was out sourced to cfets and working as a c++ programer de background trad eng
-//this trad eng seves for bank transac.it use db to match trans and now lead intend to us mem db to impove the performance.
+
+BaseCs funbacs()
+{
+	BaseCs bcs;
+	return bcs;
+}

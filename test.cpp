@@ -1149,5 +1149,12 @@ int main()
 	thread td2(getter);
 	td1.join();
 	td2.join();
+
+	int** arr = new int*[20];
+	for (int i = 0; i < 20; i++)
+	{
+		arr[i] = new int[10];
+	}
+	BaseCs bbcs = funbacs();//草泥马傻逼医科大
 	return 0;
 }
