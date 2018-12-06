@@ -1110,3 +1110,63 @@ BaseCs funbacs()
 	BaseCs bcs;
 	return bcs;
 }
+template <typename T>
+void quicksort(T a[], int start, int end)
+{
+	T final = a[start];
+	int i = start;
+	int j = end;
+	while (i < j)
+	{
+		while (i < j && a[j] >= final)
+		{
+			j--;
+		}
+		a[i] = a[j];
+		while (i < j && a[i] <= final)
+		{
+			i++;
+		}
+		a[j] = a[i];
+	}
+	a[i] = final;
+	quicksort(a, start, i - 1);
+	quicksort(a, i + 1, end);
+}
+
+template <typename T>
+void heap_adjust(T a[], int start, int end)
+{
+	int father = start;
+	int son = father * 2 + 1;
+	while (son <= end)
+	{
+		if (son + 1 <= end && a[son] > a[son + 1])
+		{
+			son++;
+		}
+		if (a[father] < a[son])
+		{
+			return;
+		}
+		else
+		{
+			swap(a[father], a[son]);
+			father = son;
+			son = son * 2 + 1;
+		}
+	}
+}
+template <typename T>
+void heap_sort(T a[], int len)
+{
+	for (int i = len / 2 - 1; i >= 0; i--)
+	{
+		heap_adjust(a, i, len - 1);
+	}
+	for (int i = len - 1; i > 0; i--)
+	{
+		swap(a[0], a[i]);
+		heap_adjust(a, 0, i - 1);
+	}
+}
