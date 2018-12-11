@@ -1170,3 +1170,138 @@ void heap_sort(T a[], int len)
 		heap_adjust(a, 0, i - 1);
 	}
 }
+
+//复杂链表的复制
+template <typename T>
+struct ComplexLink {
+	T data;
+	ComplexLink* next;
+	ComplexLink* other;
+};
+
+template <typename T>
+ComplexLink<T>* copyfromComplexLink(ComplexLink<T>* head)
+{
+	if (head == nullptr)
+	{
+		return nullptr;
+	}
+	ComplexLink* curr = head;
+	ComplexLink* newhead, newcurr,newprior;
+	while (curr != nullptr)
+	{
+		ComplexLink<T>* newNode = new ComplexLink<T>();
+		newNode->data = curr->data;
+		newNode->next = curr->next;
+		curr->next = newNode;
+		curr = newNode->next;
+	}
+	curr = head;
+	newhead = curr->next;
+	newprior = head;
+	while (curr != nullptr)
+	{
+		newcurr = curr->next;
+		if (curr->other)
+		{
+			newcurr->other = curr->other->next;
+		}
+		newprior->next = newcurr;
+		curr->next = newcurr->next;
+		newprior = newprior->next;
+		curr = curr->next;
+	}
+	newprior->next = nullptr;
+	return newhead;
+}
+
+template <typename T>
+ComplexLink<T>* copyfromComplexLink2(ComplexLink<T>* head)
+{
+	using ComplexlinkMap = map<ComplexLink<T>* src, ComplexLink<T>* dest>;
+	ComplexlinkMap mymap;
+
+	if (head == nullptr)
+	{
+		return nullptr;
+	}
+	ComplexLink* curr = head;
+	ComplexLink* newhead = nullptr;
+	ComplexLink* prior = nullptr;
+
+	while (curr)
+	{
+		ComplexLink<T>* newNode = new ComplexLink<T>();
+		if (!prior)
+		{
+			prior = newNode;
+		}
+		else
+		{
+			prior->next = newNode;
+			prior = prior->next;
+		}
+		if (!newhead)
+		{
+			newhead = newNode;
+		}
+		newNode->data = curr->data;
+		mymap.insert(make_pair(curr, newNode));
+		curr = curr->next;
+	}
+	curr = head;
+	ComplexLink* newcurr = newhead;
+	while (curr && newcurr)
+	{
+		if (curr->other)
+		{
+			auto searchresult = mymap.find(curr->other);
+			newcurr->other = searchresult->second;
+		}
+		curr = curr->next;
+		newcurr = newcurr->next;
+	}
+	mymap.clear();
+	return newhead;
+}
+
+template <typename T>
+ComplexLink<T>* CreateComplexLink(int n)
+{
+	vector<ComplexLink<T>*> myvec;
+
+	ComplexLink<T>* head = nullptr;
+	ComplexLink<T>* prior = nullptr;
+	for (int i = 0; i < n; i++)
+	{
+		ComplexLink<T>* newnode = new ComplexLink<T>;
+		newnode->data = i;
+		if (!head)
+		{
+			head = newnode;
+		}
+		if (!prior)
+		{
+			prior = newnode;
+		}
+		else
+		{
+			prior->next = newnode;
+			prior = prior->next;
+		}
+		myvec.push_back(newnode);
+	}
+	prior->next = nullptr;
+	random_device r;
+	default_random_engine e(r());
+	uniform_int_distribution<int> u(0, n - 1);
+
+	ComplexLink<T>* curr = head;
+	for (int i = 0;i < n; i++)
+	{
+		curr->other = myvec[u(e)];
+		curr = curr->next;
+	}
+	vector<ComplexLink<T>*>().swap(myvec);
+	return head;
+}

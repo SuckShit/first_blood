@@ -1161,5 +1161,7 @@ int main()
 
 	aligned_union_t<1, BaseCs> _storage; 
 	BaseCs* pbcsaln = new(static_cast<void*>(&_storage)) BaseCs;
+
+	ComplexLink<int>* head = CreateComplexLink<int>(10);
 	return 0;
 }
