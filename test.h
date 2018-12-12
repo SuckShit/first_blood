@@ -1180,15 +1180,32 @@ struct ComplexLink {
 };
 
 template <typename T>
+void printComplexLink(ComplexLink<T>* head)
+{
+	ComplexLink<T>* curr = head;
+	while (curr)
+	{
+		cout << "curPos:" << curr << endl;
+		cout << "-----" << curr->data << endl;
+		if (curr->other)
+		{
+			cout << "-----otherPos:" << curr->other << endl;
+			cout << "-------------" << curr->other->data << endl;
+		}
+		curr = curr->next;
+	}
+}
+
+template <typename T>
 ComplexLink<T>* copyfromComplexLink(ComplexLink<T>* head)
 {
 	if (head == nullptr)
 	{
 		return nullptr;
 	}
-	ComplexLink* curr = head;
-	ComplexLink* newhead, newcurr,newprior;
-	while (curr != nullptr)
+	ComplexLink<T>* curr = head;
+	ComplexLink<T>* newhead, *newcurr,*newprior;
+	while (curr)
 	{
 		ComplexLink<T>* newNode = new ComplexLink<T>();
 		newNode->data = curr->data;
@@ -1198,17 +1215,31 @@ ComplexLink<T>* copyfromComplexLink(ComplexLink<T>* head)
 	}
 	curr = head;
 	newhead = curr->next;
-	newprior = head;
-	while (curr != nullptr)
+	while (curr)//must assign the other pointer in one loop before disconnect the list in the other loop because the other pointer may point to the address before it
 	{
 		newcurr = curr->next;
 		if (curr->other)
 		{
 			newcurr->other = curr->other->next;
 		}
-		newprior->next = newcurr;
+		curr = newcurr->next;
+	}
+	curr = head;
+	newprior = nullptr;
+	while (curr)
+	{
+		newcurr = curr->next;
+		if (newprior)
+		{
+			newprior->next = newcurr;
+			newprior = newprior->next;
+		}
+		else
+		{
+			newprior = newcurr;
+		}
 		curr->next = newcurr->next;
-		newprior = newprior->next;
+		newcurr->next = nullptr;
 		curr = curr->next;
 	}
 	newprior->next = nullptr;
@@ -1218,16 +1249,16 @@ ComplexLink<T>* copyfromComplexLink(ComplexLink<T>* head)
 template <typename T>
 ComplexLink<T>* copyfromComplexLink2(ComplexLink<T>* head)
 {
-	using ComplexlinkMap = map<ComplexLink<T>* src, ComplexLink<T>* dest>;
+	using ComplexlinkMap = map<ComplexLink<T>*, ComplexLink<T>*>;
 	ComplexlinkMap mymap;
 
 	if (head == nullptr)
 	{
 		return nullptr;
 	}
-	ComplexLink* curr = head;
-	ComplexLink* newhead = nullptr;
-	ComplexLink* prior = nullptr;
+	ComplexLink<T>* curr = head;
+	ComplexLink<T>* newhead = nullptr;
+	ComplexLink<T>* prior = nullptr;
 
 	while (curr)
 	{
@@ -1250,7 +1281,7 @@ ComplexLink<T>* copyfromComplexLink2(ComplexLink<T>* head)
 		curr = curr->next;
 	}
 	curr = head;
-	ComplexLink* newcurr = newhead;
+	ComplexLink<T>* newcurr = newhead;
 	while (curr && newcurr)
 	{
 		if (curr->other)

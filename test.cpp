@@ -1162,6 +1162,15 @@ int main()
 	aligned_union_t<1, BaseCs> _storage; 
 	BaseCs* pbcsaln = new(static_cast<void*>(&_storage)) BaseCs;
 
-	ComplexLink<int>* head = CreateComplexLink<int>(10);
+	ComplexLink<int>* head = CreateComplexLink<int>(5);
+	cout << "the origin one:" << endl;
+	printComplexLink(head);
+
+	ComplexLink<int>* newhead = copyfromComplexLink(head);
+	ComplexLink<int>* newhead2 = copyfromComplexLink2(head);
+	cout << "the copy one:" << endl;
+	printComplexLink(newhead);
+	cout << "the other one:" << endl;
+	printComplexLink(newhead2);
 	return 0;
 }
