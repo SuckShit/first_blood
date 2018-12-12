@@ -1336,3 +1336,44 @@ ComplexLink<T>* CreateComplexLink(int n)
 	vector<ComplexLink<T>*>().swap(myvec);
 	return head;
 }
+
+//LeetCode No.10
+bool isRegularExpMatching(string s, string p)
+{
+	int slen = s.length();
+	int plen = p.length();
+
+	int m = 0;
+	int n = 0;
+	while (m < slen && n < plen)
+	{
+		if (p[n + 1] && p[n + 1]=='*')
+		{
+			if (s[m] == p[n] || p[n] == '.')
+			{
+				m++;
+			}
+			else
+			{
+				n += 2;
+			}
+		}
+		else
+		{
+			if (s[m] == p[n] || p[n] == '.')
+			{
+				m++;
+				n++;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	if (m == slen && (n == plen || n == plen - 2 &&( p[n] == s[m - 1] || p[n] == '.')))
+	{
+		return true;
+	}
+	return false;
+}

@@ -1172,5 +1172,10 @@ int main()
 	printComplexLink(newhead);
 	cout << "the other one:" << endl;
 	printComplexLink(newhead2);
+
+	bool bres = isRegularExpMatching("aa", "a");
+	bres = isRegularExpMatching("aa", "a*");
+	bres = isRegularExpMatching("ab", ".*");
+	bres = isRegularExpMatching("aab", "c*a*b");
 	return 0;
 }
