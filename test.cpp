@@ -1181,5 +1181,16 @@ int main()
 
 	int maxlen = 0;
 	vector<string> whatthefuck = LongestSubString("asdhjklnm", "asdsdjklndhjkasdh", maxlen);
+
+	shared_ptr<Foo> f = make_shared<Foo>();
+	shared_ptr<Foo> f1 = f;
+	shared_ptr<Bar> specific_data(f, &f->bar);
+
+	cout << "shared_ptr's ref count is: " << f.use_count() << "and" << specific_data.use_count() << endl;
+	f.reset();
+	cout << "after reset, the shared_ptr's ref count is: " << f.use_count() << "and" << specific_data.use_count() << endl;
+
+	unique_ptr<Foo> up = make_unique<Foo>();
+	auto up2 = move(up);
 	return 0;
 }

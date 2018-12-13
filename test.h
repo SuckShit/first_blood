@@ -1399,3 +1399,11 @@ vector<string> LongestSubString(string s, string t, int& max)//最长后缀
 	}
 	return res;
 }
+
+struct Bar {
+	// some data that we want to point to
+};
+
+struct Foo {
+	Bar bar;
+};
