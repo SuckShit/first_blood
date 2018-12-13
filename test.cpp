@@ -1174,8 +1174,12 @@ int main()
 	printComplexLink(newhead2);
 
 	bool bres = isRegularExpMatching("aa", "a");
+	bres = isRegularExpMatching("aaa", "a*a");
 	bres = isRegularExpMatching("aa", "a*");
 	bres = isRegularExpMatching("ab", ".*");
 	bres = isRegularExpMatching("aab", "c*a*b");
+
+	int maxlen = 0;
+	vector<string> whatthefuck = LongestSubString("asdhjklnm", "asdsdjklndhjkasdh", maxlen);
 	return 0;
 }
