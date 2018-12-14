@@ -1189,7 +1189,7 @@ int main()
 	cout << "shared_ptr's ref count is: " << f.use_count() << "and" << specific_data.use_count() << endl;
 	f.reset();
 	cout << "after reset, the shared_ptr's ref count is: " << f.use_count() << "and" << specific_data.use_count() << endl;
-
+	//delete f1.get();  实际不能delete 必须delete reference control block
 	unique_ptr<Foo> up = make_unique<Foo>();
 	auto up2 = move(up);
 	return 0;
