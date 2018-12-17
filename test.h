@@ -1443,3 +1443,9 @@ private:
 	string _name;
 	string _type;
 };
+
+
+struct BaseClass { virtual const char * behave() = 0; };
+struct Left : BaseClass { virtual const char * behave() { return "Left"; } };
+struct Right : BaseClass { virtual const char * behave() { return "Right"; } };
+struct MostDerived : Left, Right { };
