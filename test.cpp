@@ -1191,7 +1191,7 @@ int main()
 	vector<string> whatthefuck = LongestSubString("asdhjklnm", "asdsdjklndhjkasdh", maxlen);
 
 	shared_ptr<Foo> f = make_shared<Foo>();
-	shared_ptr<Foo> f1 = f;
+	shared_ptr<Foo> f1 = f->getptr();
 	shared_ptr<Bar> specific_data(f, &f->bar);
 
 	cout << "shared_ptr's ref count is: " << f.use_count() << "and" << specific_data.use_count() << endl;
@@ -1200,5 +1200,23 @@ int main()
 	//delete f1.get();  实际不能delete 必须delete reference control block
 	unique_ptr<Foo> up = make_unique<Foo>();
 	auto up2 = move(up);
+
+	is_arithmetic_fun<int>();
+	is_arithmetic_fun<Foo>();
+
+	//基类指针转为派生类指针,且该基类指针指向基类对象。
+	ANIMAL * ani1 = new ANIMAL;
+	DOG * dog1 = static_cast<DOG*>(ani1);
+	//dog1->OutPuttype();//错误，在ANIMAL类型指针不能调用方法OutPutType（）；在运行时出现错误。
+
+	//基类指针转为派生类指针，且该基类指针指向派生类对象
+	ANIMAL * ani3 = new DOG;
+	DOG* dog3 = static_cast<DOG*>(ani3);
+	dog3->OutPutname(); //正确
+	dog3->OutPuttype();
+	//子类指针转为派生类指针
+	DOG *dog2 = new DOG;
+	ANIMAL *ani2 = static_cast<DOG*>(dog2);
+	ani2->OutPutname(); //正确，结果输出为大黄
 	return 0;
 }

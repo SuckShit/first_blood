@@ -1404,6 +1404,42 @@ struct Bar {
 	// some data that we want to point to
 };
 
-struct Foo {
+struct Foo : enable_shared_from_this<Foo> 
+{
+	shared_ptr<Foo> getptr()
+	{
+		return shared_from_this();
+	}
 	Bar bar;
+};
+
+template <typename T, enable_if_t<is_arithmetic_v<T>, int> = 0>
+void is_arithmetic_fun()
+{
+	cout << "I'm arithmetic." << endl;
+}
+
+template <typename T, enable_if_t<is_class_v<T>, int> = 0>
+void is_arithmetic_fun()
+{
+	cout << "I'm class." << endl;
+}
+
+class ANIMAL
+{
+public:
+	ANIMAL() :_type("ANIMAL") {};
+	virtual void OutPutname() { cout << "ANIMAL" << endl; }
+private:
+	string _type;
+};
+class DOG :public ANIMAL
+{
+public:
+	DOG() :_name("大黄"), _type("DOG") {};
+	void OutPutname() { cout << _name << endl; }
+	void OutPuttype() { cout << _type << endl; }
+private:
+	string _name;
+	string _type;
 };
