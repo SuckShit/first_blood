@@ -1250,7 +1250,7 @@ int main()
 	BaseClass * baseClassThroughLeft = left; // or, equivalently:
 	// BaseClass * baseClassThroughLeft = reinterpret_cast<Left*>(mostDerived);
 	Right * right = mostDerived;
-	BaseClass * baseClassThroughRight = left;
+	BaseClass * baseClassThroughRight = right;
 
 	// this is of course ambiguous and does not compile
 	//std::cout << mostDerived->behave() << std::endl;
@@ -1268,7 +1268,7 @@ int main()
 		<< " at addr: " << static_cast<Right *>(baseClassThroughLeft) << std::endl;
 	std::cout << "with dynamic_cast, behaves as "
 		<< dynamic_cast<Right *>(baseClassThroughLeft)->behave()
-		<< " at addr: " << dynamic_cast<Right *>(baseClassThroughLeft) << std::endl;
+		<< " at addr: " << dynamic_cast<Right *>(baseClassThroughLeft) << std::endl;//sidecast
 
 	std::cout << "Cast Right BaseClass * expression to Left *:" << std::endl;
 	std::cout << "with static_cast, behaves as "
@@ -1276,7 +1276,7 @@ int main()
 		<< " at addr: " << static_cast<Left *>(baseClassThroughRight) << std::endl;
 	std::cout << "with dynamic_cast, behaves as "
 		<< dynamic_cast<Left *>(baseClassThroughRight)->behave()
-		<< " at addr: " << dynamic_cast<Left *>(baseClassThroughRight) << std::endl;
+		<< " at addr: " << dynamic_cast<Left *>(baseClassThroughRight) << std::endl;//sidecast
 
 	delete mostDerived;
 
