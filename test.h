@@ -1437,7 +1437,7 @@ class DOG :public ANIMAL
 {
 public:
 	DOG() :_name("大黄"), _type("DOG") {};
-	void OutPutname() { cout << _name << endl; }
+	virtual void OutPutname() { cout << _name << endl; }
 	void OutPuttype() { cout << _type << endl; }
 private:
 	string _name;

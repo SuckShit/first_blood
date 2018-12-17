@@ -1206,17 +1206,41 @@ int main()
 
 	//基类指针转为派生类指针,且该基类指针指向基类对象。
 	ANIMAL * ani1 = new ANIMAL;
-	DOG * dog1 = static_cast<DOG*>(ani1);
-	//dog1->OutPuttype();//错误，在ANIMAL类型指针不能调用方法OutPutType（）；在运行时出现错误。
+	DOG * dog1 = dynamic_cast<DOG*>(ani1);
+	if (dog1)
+	{
+		dog1->OutPutname();
+	}
+
+	try
+	{
+		DOG& dog11 = dynamic_cast<DOG&>(*ani1);
+	}catch (const bad_cast& e)
+	{
+		cout << e.what() << endl;
+	}
+	
+	DOG * dog111 = static_cast<DOG*>(ani1);
+	//dog111->OutPuttype();//错误，在ANIMAL类型指针不能调用方法OutPutType（）；在运行时出现错误。
 
 	//基类指针转为派生类指针，且该基类指针指向派生类对象
 	ANIMAL * ani3 = new DOG;
 	DOG* dog3 = static_cast<DOG*>(ani3);
 	dog3->OutPutname(); //正确
 	dog3->OutPuttype();
-	//子类指针转为派生类指针
+
+	DOG* dog33 = dynamic_cast<DOG*>(ani3);
+	dog33->OutPutname(); //正确
+	dog33->OutPuttype();
+
+	//派生类指针转为基类指针，且该派生类指针指向派生类对象
 	DOG *dog2 = new DOG;
 	ANIMAL *ani2 = static_cast<DOG*>(dog2);
 	ani2->OutPutname(); //正确，结果输出为大黄
+	//ani2->OutPuttype();
+
+	//派生类指针转为基类指针，且该派生类指针指向基类对象 wrong!!!
+	//DOG * dog22 = new ANIMAL;
+
 	return 0;
 }
