@@ -1159,7 +1159,15 @@ int main()
 	}
 	BaseCs bbcs = funbacs();//草泥马傻逼医科大
 
+	cout << sizeof(char*) << endl;
+	cout << sizeof(short) << endl;
+	cout << sizeof(int) << endl;
+	cout << sizeof(double) << endl;
+	cout << sizeof(float) << endl;
+
 	aligned_union_t<1, BaseCs> _storage; 
+	cout << typeid(_storage._Val).name() << endl;
+	int alignofsz = alignof(BaseCs);
 	BaseCs* pbcsaln = new(static_cast<void*>(&_storage)) BaseCs;
 
 	ComplexLink<int>* head = CreateComplexLink<int>(5);
