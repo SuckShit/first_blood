@@ -1121,7 +1121,7 @@ int main()
 
 	BaseCs* pbcs1 = &dcs1;
 	pbcs1->f();
-
+	//pbcs1->f1();
 	using pfun = void(*)();
 	cout << "vbf of BaseCs:" << endl;
 	cout << pbcs1 << ":" << *(int*)pbcs1 << endl;
@@ -1221,6 +1221,7 @@ int main()
 	}
 	
 	DOG * dog111 = static_cast<DOG*>(ani1);
+	dog111->OutPutname();
 	//dog111->OutPuttype();//错误，在ANIMAL类型指针不能调用方法OutPutType（）；在运行时出现错误。
 
 	//基类指针转为派生类指针，且该基类指针指向派生类对象
@@ -1244,6 +1245,11 @@ int main()
 
 
 	MostDerived * mostDerived = new MostDerived();
+	mostDerived->_d = 5;
+	mostDerived->_c = 4;
+	mostDerived->_b = 3;
+	mostDerived->Left::_a = 2;
+	mostDerived->Right::_a = 1;
 	// implicit upcast through the diamond results in a compile-time error, ambiguous:
 	// BaseClass * baseClass = mostDerived;
 	Left * left = mostDerived;

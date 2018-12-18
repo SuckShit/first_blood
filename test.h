@@ -1445,7 +1445,23 @@ private:
 };
 
 
-struct BaseClass { virtual const char * behave() = 0; };
-struct Left : BaseClass { virtual const char * behave() { return "Left"; } };
-struct Right : BaseClass { virtual const char * behave() { return "Right"; } };
-struct MostDerived : Left, Right { };
+struct BaseClass { 
+	virtual const char * behave() { return "Base"; };
+	virtual void fa() {} 
+	int _a;
+};
+struct Left : BaseClass { 
+	virtual const char * behave() { return "Left"; } 
+	virtual void fl() {} 
+	int _b;
+};
+struct Right : BaseClass {
+	virtual const char * behave() { return "Right"; } 
+	virtual void fr() {}
+	int _c;
+};
+struct MostDerived : Left, Right {
+	virtual const char * behave() { return "Derived"; }
+	virtual void fd(){}
+	int _d;
+};
