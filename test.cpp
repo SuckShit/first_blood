@@ -1285,6 +1285,7 @@ int main()
 		<< " at addr: " << dynamic_cast<Left *>(baseClassThroughRight) << std::endl;//sidecast
 
 	delete mostDerived;
-
+	
+	double median = findMedianSortedArrays2(vector<int>{ 3 }, vector<int>{ 1,2,4,5 });
 	return 0;
 }

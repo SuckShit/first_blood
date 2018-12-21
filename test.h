@@ -1465,3 +1465,96 @@ struct MostDerived : Left, Right {
 	virtual void fd(){}
 	int _d;
 };
+//leetcode 4
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+	vector<int> result;
+	int m = nums1.size(), n = nums2.size();
+	int i = 0, j = 0;
+	for (; i < m && j < n;)
+	{
+		nums1[i] <= nums2[j] ? (result.push_back(nums1[i]), i++)
+			: (result.push_back(nums2[j]), j++);
+	}
+	if (i < m)
+	{
+		for (; i < m; i++)
+			result.push_back(nums1[i]);
+	}
+	else if (j < n)
+	{
+		for (; j < n; j++)
+			result.push_back(nums2[j]);
+	}
+	double res1 = result[(m + n) / 2];
+	double res2 = result[(m + n) / 2 - 1];
+	if ((m + n) % 2 == 0)
+		return (res1 + res2) / 2;
+	else
+		return res1/2;
+}
+
+//leetcode 4 log(m + n)
+/*
+		leftpart					rightpart
+A[0] A[1] A[2] ... A[i-1] |  A[i] A[i+1] ... A[m-1]
+B[0] B[1] B[2] ... B[j-1] |  B[j] B[j+1] ... B[n-1]
+*/
+double findMedianSortedArrays2(vector<int>& nums1, vector<int>& nums2) {
+	int m = nums1.size(), n = nums2.size();
+	if (m > n)
+	{
+		m = m ^ n;
+		n = m ^ n;
+		m = m ^ n;
+		nums1.swap(nums2);
+	}
+	int left = 0, right = m;
+	while (left <= right)
+	{
+		int i = (left + right) / 2;
+		int j = (m + n + 1) / 2 - i;
+		if (i > 0 && nums1[i - 1] > nums2[j])
+		{
+			right = --i;
+		}
+		else if (i < m && nums2[j - 1] > nums1[i])
+		{
+			left = ++i;
+		}
+		else
+		{
+			if (i == 0)
+			{
+				left = nums2[j - 1];
+			}
+			else if (j == 0)
+			{
+				left = nums1[i - 1];
+			}
+			else
+			{
+				left = std::max<int>(nums1[i - 1], nums2[j - 1]);
+			}
+			if (i == m)
+			{
+				right = nums2[j];
+			}
+			else if (j == n)
+			{
+				right = nums1[i];
+			}
+			else
+			{
+				right = std::min<int>(nums1[i], nums2[j]);
+			}
+			if ((m + n) % 2 == 0)
+			{
+				return (double(left + right)) / 2;
+			}
+			else
+			{
+				return left;
+			}
+		}
+	}
+}
