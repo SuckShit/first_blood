@@ -1287,5 +1287,16 @@ int main()
 	delete mostDerived;
 	
 	double median = findMedianSortedArrays2(vector<int>{ 3 }, vector<int>{ 1,2,4,5 });
+
+	random_device r;
+	default_random_engine e(r());
+	uniform_int_distribution<int> u(0, 10);
+	vector<ListNode*> vecL;
+	for (size_t i = 0; i < 5; i++)
+	{
+		ListNode* pln = makesortedlist(u(e));
+		vecL.push_back(pln);
+	}
+	ListNode* resp = mergeKLists(vecL);
 	return 0;
 }

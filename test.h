@@ -1558,3 +1558,82 @@ double findMedianSortedArrays2(vector<int>& nums1, vector<int>& nums2) {
 		}
 	}
 }
+//leetcode 23
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+ListNode* merge2lists(ListNode* l1, ListNode* l2)
+{
+	if (l1 == nullptr)
+	{
+		return l2;
+	}
+	if (l2 == nullptr)
+	{
+		return l1;
+	}
+	ListNode* head = nullptr, *prior = nullptr;
+	while (l1 && l2)
+	{
+		if (prior == nullptr)
+		{
+			prior = l1->val <= l2->val ? l1 : l2;
+			head = prior;
+		}
+		else
+		{
+			prior->next = l1->val <= l2->val ? l1 : l2;
+			prior = prior->next;
+		}
+		prior == l1 ? l1 = l1->next : l2 = l2->next;
+	}
+	l1 != nullptr ? prior->next = l1 : true;
+	l2 != nullptr ? prior->next = l2 : true;
+	return head;
+}
+ListNode* mergeKLists(vector<ListNode*>& lists) 
+{
+	if (lists.empty())
+	{
+		return nullptr;
+	}
+	while (lists.size() > 1)
+	{
+		lists.push_back(merge2lists(lists[0], lists[1]));
+		lists.erase(lists.begin());
+		lists.erase(lists.begin());
+	}
+	return lists[0];
+}
+ListNode* makesortedlist(int len)
+{
+	random_device r;
+	default_random_engine e(r());
+	uniform_int_distribution<int> u(0, 10000);
+
+	vector<int> tmp;
+	for (int i = 0; i < len; i++)
+	{
+		tmp.push_back(u(e));
+	}
+	sort(tmp.begin(), tmp.end(), [](int x, int y) {return x <= y; });
+	ListNode* head = nullptr, *prior = nullptr;
+	for (int i = 0; i < len; i++)
+	{
+		ListNode* l = new ListNode(tmp[i]);
+		if (prior == nullptr)
+		{
+			prior = l;
+			head = l;
+		}
+		else
+		{
+			prior->next = l;
+			prior = prior->next;
+		}
+	}
+	prior->next = nullptr;
+	return head;
+}
