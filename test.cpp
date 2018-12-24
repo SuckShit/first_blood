@@ -1303,5 +1303,15 @@ int main()
 		vecL.push_back(pln);
 	}
 	ListNode* resp = mergeKLists(vecL);
+
+	//int* intp = new int(10);
+	//vector<int*> vectst;
+	//vectst.push_back(intp);
+	//*vectst[0] = 9;
+	//vector<int*>().swap(vectst);
+
+	ListNode* tmplst = makesortedlist(10);
+	//resp = reverseList(tmplst);
+	resp = reverseKGroup(tmplst, 4);
 	return 0;
 }
