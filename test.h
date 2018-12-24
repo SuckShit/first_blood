@@ -1611,14 +1611,14 @@ ListNode* makesortedlist(int len)
 {
 	random_device r;
 	default_random_engine e(r());
-	uniform_int_distribution<int> u(0, 10000);
+	uniform_int_distribution<int> u(0, 100);
 
 	vector<int> tmp;
 	for (int i = 0; i < len; i++)
 	{
 		tmp.push_back(u(e));
 	}
-	sort(tmp.begin(), tmp.end(), [](int x, int y) {return x <= y; });
+	sort(tmp.begin(), tmp.end(), [](int x, int y) {return x < y; });
 	ListNode* head = nullptr, *prior = nullptr;
 	for (int i = 0; i < len; i++)
 	{
@@ -1634,6 +1634,82 @@ ListNode* makesortedlist(int len)
 			prior = prior->next;
 		}
 	}
-	prior->next = nullptr;
+	return head;
+}
+
+//leetcode 25
+ListNode* reverseList(ListNode* &head)
+{
+	if (!head)
+	{
+		return nullptr;
+	}
+	ListNode* tail = head, *curp = head->next;
+	while (curp)
+	{
+		ListNode* p = curp->next;
+		tail->next = p;
+		curp->next = head;
+		head = curp;
+		curp = p;
+	}
+	return head;
+}
+ListNode* reverseKGroupImpl(ListNode* &head, int k) 
+{
+	ListNode* curhead, *curtail, *curp, *pretail = nullptr;
+	if (!head)
+	{
+		return nullptr;
+	}
+	if (k == 1 || k == 0)
+	{
+		return head;
+	}
+	curhead = head;
+	curtail = head;
+	curp = head;
+	bool flag = false;
+	while (curp)
+	{
+		int i = 0;
+		for (; i < k; i++)
+		{
+			if (curp == curhead)
+			{
+				curp = curp->next;
+				continue;
+			}
+			if (curp)
+			{
+				ListNode* p = curp->next;
+				curtail->next = p;
+				curp->next = curhead;
+				curhead = curp;
+				curp = p;
+			}
+			else
+			{
+				break;
+			}
+		}
+		if (i < k)
+		{
+			reverseList(curhead);
+			return head;
+		}
+		if (!flag)
+		{
+			head = curhead;
+			flag = true;
+		}
+		if (pretail)
+		{
+			pretail->next = curhead;
+		}
+		pretail = curtail;
+		curhead = curtail->next;
+		curtail = curhead;
+	}
 	return head;
 }
