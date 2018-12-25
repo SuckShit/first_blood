@@ -1157,6 +1157,11 @@ int main()
 	{
 		arr[i] = new int[10];
 	}
+	for (int i = 0; i < 20; i++)
+	{
+		delete[] arr[i];
+	}
+	delete[] arr;
 	BaseCs bbcs = funbacs();//草泥马傻逼医科大
 
 	cout << sizeof(char*) << endl;
