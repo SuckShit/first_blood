@@ -1713,3 +1713,40 @@ ListNode* reverseKGroupImpl(ListNode* &head, int k)
 	}
 	return head;
 }
+
+//leetcode 32
+int longestValidParentheses(string s) 
+{
+	int max = 0, total = 0, curr = -1;
+	int n = s.length();
+	struct st
+	{
+		char c;
+		int pos;
+	};
+	vector<st> pair;
+	for (int i = 0; i < n; i++)
+	{
+		if (!pair.empty() && pair.back().c == '(' && s[i] == ')')
+		{
+			pair.pop_back();
+		}
+		else
+		{
+			pair.push_back(st{ s[i], i });
+		}
+	}
+	if (pair.empty())
+	{
+		return n;
+	}
+	for (int i = 0; i < pair.size(); i++)
+	{
+		total = pair[i].pos - curr - 1;
+		max = total > max ? total : max;
+		curr = pair[i].pos;
+	}
+	total = n - 1 - curr;
+	max = total > max ? total : max;
+	return max;
+}
