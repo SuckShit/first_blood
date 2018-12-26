@@ -23,6 +23,7 @@
 #include <map>
 #include <condition_variable>
 #include <bitset>
+#include <iomanip>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -1827,7 +1828,7 @@ private:
 	}
 	bool trytofillcells(int k)
 	{
-		if (k > btstate.size())
+		if (k >= btstate.size())
 		{
 			return true;
 		}
@@ -1837,6 +1838,7 @@ private:
 		{
 			return trytofillcells(k + 1);
 		}
+		vector<vector<element>> snapshot(cells);
 		for (int v = 1; v <= 9; v++)
 		{
 			if (cells[m][n].nums[v])
@@ -1848,8 +1850,10 @@ private:
 						return true;
 					}
 				}
-			}
+				cells = snapshot;
+			}			
 		}
+		return false;
 	}
 public:
 	SolutionLC37()
@@ -1870,6 +1874,18 @@ public:
 				}
 			}
 		}
-		return true;
+		sortemptycell();
+		if (trytofillcells(0))
+		{
+			for (int i = 0; i < 9; i++)
+			{
+				for (int j = 0; j < 9; j++)
+				{
+					board[i][j] = cells[i][j].value + '0';
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 };
