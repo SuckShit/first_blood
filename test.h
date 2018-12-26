@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include <map>
 #include <condition_variable>
+#include <bitset>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -1750,3 +1751,125 @@ int longestValidParentheses(string s)
 	max = total > max ? total : max;
 	return max;
 }
+
+//leetcode 37
+class SolutionLC37 {
+private:
+	struct element
+	{
+		int value;
+		bitset<10> nums;		//bitset<n> == 1表示 这个还没设
+		int rest;				//剩余多少个数字
+		element():value(0), rest(9), nums(0x03fe) {}
+	};
+	vector<vector<element>> cells;
+	vector<pair<int, int>> btstate;
+	bool setbit(int i, int j, int v)//设置每一个element
+	{
+		for (int k = 0; k < 9; k++)
+		{
+			if (k != j && !updatebitset(i ,k, v))
+			{
+				return false;
+			}
+			if (k != i && !updatebitset(k, j, v))
+			{
+				return false;
+			}
+			int m = i / 3 * 3 + k / 3;
+			int n = j / 3 * 3 + k % 3;
+			if (m != i && n != j && !updatebitset(m, n, v))
+			{
+				return false;
+			}
+		}
+		element& c = cells[i][j];
+		c.value = v;
+		if (--c.rest < 0)
+		{
+			return false;
+		}
+		c.nums.reset(v);
+		return true;
+	}
+	bool updatebitset(int i, int j, int v)
+	{
+		element& c = cells[i][j];
+		if (c.value == v)
+		{
+			return false;
+		}
+		if (!c.nums[v])
+		{
+			return true;
+		}
+		if (--c.rest < 0)
+		{
+			return false;
+		}
+		c.nums.reset(v);
+		return true;
+	}
+	void sortemptycell()
+	{
+		for (int i = 0; i < 9; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				if (!cells[i][j].value)
+				{
+					btstate.push_back(make_pair(i, j));
+				}
+			}
+		}
+		sort(btstate.begin(), btstate.end(), [this](const pair<int, int>& a, const pair<int, int>& b)
+		{return cells[a.first][a.second].rest < cells[b.first][b.second].rest; });
+	}
+	bool trytofillcells(int k)
+	{
+		if (k > btstate.size())
+		{
+			return true;
+		}
+		int m = btstate[k].first;
+		int n = btstate[k].second;
+		if (cells[m][n].value)
+		{
+			return trytofillcells(k + 1);
+		}
+		for (int v = 1; v <= 9; v++)
+		{
+			if (cells[m][n].nums[v])
+			{
+				if (setbit(m, n, v))
+				{
+					if (trytofillcells(k + 1))
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+public:
+	SolutionLC37()
+	{
+		vector<vector<element>> tmp(9, vector<element>(9, element()));
+		cells.swap(tmp);
+	}
+	bool solveSudoku(vector<vector<char>>& board) 
+	{
+		for (int i = 0;i < 9; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				char c = board[i][j];
+				if (c != '.' && !setbit(i, j, c - '0'))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+};
