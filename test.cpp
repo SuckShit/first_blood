@@ -1326,5 +1326,7 @@ int main()
 		}
 		cout << endl;
 	}
+	vector<int> nums{ 7,8,9,11,12 };
+	int missing = firstMissingPositive(nums);
 	return 0;
 }

@@ -1889,3 +1889,60 @@ public:
 		return false;
 	}
 };
+
+//leetcode 41
+int firstMissingPositive(vector<int>& nums) 
+{
+	int len = nums.size();
+	if (len == 0)
+	{
+		return 1;
+	}
+	for (int i = 0; i < len; i++)
+	{
+		if (nums[i] == 1 && i != 0)
+		{
+			swap(nums[0], nums[i]);
+			break;
+		}
+	}
+	if (nums[0] != 1)
+	{
+		return 1;
+	}
+	else
+	{
+		for (int i = 1; i < len;)
+		{
+			if (nums[i] > len || nums[i] <= 0)
+			{
+				nums[i] = 0;
+				i++;
+			}
+			else
+			{
+				if (nums[i] - 1 == i)
+				{
+					i++;
+				}
+				else if (nums[nums[i] - 1] == nums[i])
+				{
+					nums[i] = 0;
+					i++;
+				}
+				else
+				{
+					swap(nums[i], nums[nums[i] - 1]);
+				}
+			}
+		}
+		for (int i = 1; i < len; i++)
+		{
+			if (nums[i] == 0)
+			{
+				return i + 1;
+			}
+		}
+		return len + 1;
+	}
+}
