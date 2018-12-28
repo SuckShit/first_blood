@@ -1023,7 +1023,7 @@ int main()
 	//drink* myice = new icecream(*mydrink);
 	//bar<int>();
 	//double cost = mydrink->cost();
-	
+
 	//locale::global(locale(""));
 	//wcout << DEFAULT_IMG << endl;
 	//char c;
@@ -1038,7 +1038,7 @@ int main()
 	//	charac = nullptr;
 	//}
 	//instance->destroy();
-	hash_test htt{1};
+	hash_test htt{ 1 };
 	unordered_set<hash_test, my_hash> us = { htt, {2}, {3} };
 	for (auto& s : us)
 		std::cout << s.hash_key << '\n';
@@ -1060,7 +1060,7 @@ int main()
 	auto fwd = forward<moveornottest>(ref(mt1));
 	thread thread1(threadfun, move(mt1));
 	thread1.join();
-	
+
 	using type1 = remove_cv<const int* const>::type;
 	cout << is_same<const int*, type1>::value << endl;
 	doPrint(cout, 35, "ddd", 1.2);
@@ -1125,7 +1125,7 @@ int main()
 	using pfun = void(*)();
 	cout << "vbf of BaseCs:" << endl;
 	cout << pbcs1 << ":" << *(int*)pbcs1 << endl;
-	pfun pfunimp = (pfun)(*((int*)(*(int*)pbcs1)+1));
+	pfun pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 1));
 	pfunimp();
 	pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 2));
 	pfunimp();
@@ -1170,7 +1170,7 @@ int main()
 	cout << sizeof(double) << endl;
 	cout << sizeof(float) << endl;
 
-	aligned_union_t<1, BaseCs> _storage; 
+	aligned_union_t<1, BaseCs> _storage;
 	cout << typeid(_storage._Val).name() << endl;
 	int alignofsz = alignof(BaseCs);
 	BaseCs* pbcsaln = new(static_cast<void*>(&_storage)) BaseCs;
@@ -1220,11 +1220,12 @@ int main()
 	try
 	{
 		DOG& dog11 = dynamic_cast<DOG&>(*ani1);
-	}catch (const bad_cast& e)
+	}
+	catch (const bad_cast& e)
 	{
 		cout << e.what() << endl;
 	}
-	
+
 	DOG * dog111 = static_cast<DOG*>(ani1);
 	dog111->OutPutname();
 	//dog111->OutPuttype();//错误，在ANIMAL类型指针不能调用方法OutPutType（）；在运行时出现错误。
@@ -1290,8 +1291,8 @@ int main()
 		<< " at addr: " << dynamic_cast<Left *>(baseClassThroughRight) << std::endl;//sidecast
 
 	delete mostDerived;
-	
-	double median = findMedianSortedArrays2(vector<int>{ 3 }, vector<int>{ 1,2,4,5 });
+
+	double median = findMedianSortedArrays2(vector<int>{ 3 }, vector<int>{ 1, 2, 4, 5 });
 
 	random_device r;
 	default_random_engine e(r());
@@ -1328,5 +1329,10 @@ int main()
 	}
 	vector<int> nums{ 7,8,9,11,12 };
 	int missing = firstMissingPositive(nums);
+
+	nums = {5, 5, 1, 7, 1, 1, 5, 2, 7, 6};
+	SolutionLC42 s42;
+	missing = s42.trap(nums);
+
 	return 0;
 }

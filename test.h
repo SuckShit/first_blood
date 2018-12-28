@@ -1946,3 +1946,81 @@ int firstMissingPositive(vector<int>& nums)
 		return len + 1;
 	}
 }
+//leetcode 42
+class SolutionLC42 {
+private:
+	vector<pair<int, int>> twotops;
+	vector<int> peaks;
+	
+	void find2tops(int start, int end, vector<int>& height)
+	{
+		if (start >= end)
+		{
+			return;
+		}
+		int max1 = 0, max2 = 0, maxcur1 = 0, maxcur2 = 0;
+		for (int i = start; i <= end; i++)
+		{
+			if (height[peaks[i]] >= max1)
+			{
+				max2 = max1;
+				max1 = height[peaks[i]];
+				maxcur2 = maxcur1;
+				maxcur1 = i;
+			}
+			else if (height[peaks[i]] > max2)
+			{
+				max2 = height[peaks[i]];
+				maxcur2 = i;
+			}
+		}
+		maxcur1 <= maxcur2 ? max1 = max1 : swap(maxcur1, maxcur2);
+		twotops.push_back(make_pair(peaks[maxcur1], peaks[maxcur2]));
+		find2tops(start, maxcur1, height);
+		find2tops(maxcur2, end, height);
+	}
+public:
+	int trap(vector<int>& height)
+	{
+		int len = height.size();
+		if (len <= 2)
+		{
+			return 0;
+		}
+
+		for (int i = 0; i < len; i++)
+		{
+			if (i == 0 && height[0] > height[1] || i == len - 1 && height[i] > height[i - 1])
+			{
+				peaks.push_back(i);
+			}
+			else if (i > 0 && i < len - 1)
+			{
+				if (height[i] >= height[i - 1] && height[i] > height[i + 1] || height[i] > height[i - 1] && height[i] >= height[i + 1])
+				{
+					peaks.push_back(i);
+				}
+			}
+		}
+		int peaknum = peaks.size();
+		find2tops(0, peaknum - 1, height);
+		sort(twotops.begin(), twotops.end(), [this](pair<int, int>& a, pair<int, int>& b) {
+			return a.first < b.first;
+		});
+		int total = 0;
+		for (int i = 0; i < twotops.size(); i++)
+		{
+			int left = twotops[i].first;
+			int right = twotops[i].second;
+			int top = height[left] < height[right] ? height[left] : height[right];
+			for (int j = left; j <= right; j++)
+			{
+				if (top > height[j])
+				{
+					total += (top - height[j]);
+				}	
+			}
+		}
+		return total;
+	}
+};
