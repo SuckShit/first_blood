@@ -2024,3 +2024,51 @@ public:
 		return total;
 	}
 };
+
+class SolutionLC44 {
+public:
+	bool isMatch(string s, string p) {
+		int lens = s.size();
+		int lenp = p.size();
+		int i = 0, j = 0;
+		while (i != lens && j != lenp)
+		{
+			if (s[i] != p[j] && (p[j] != '*' || p[j] != '?'))
+			{
+				return false;
+			}
+			else if (p[j] == '*')
+			{
+				if (j = lenp - 1)
+				{
+					return true;
+				}
+				else if (i == lens - 1)
+				{
+					return false;
+				}
+				else
+				{
+					if (p[j + 1] == '*')
+					{
+						j++;
+					}
+					else if (p[j + 1] == '?')
+					{
+						i++;
+						j++;
+					}
+					else
+					{
+						s.find(p[j + 1], i);
+					}
+				}
+			}
+			else //s[i] == p[j] || p[j] == '?'
+			{
+				i++;
+				j++;
+			}
+		}
+	}
+};
