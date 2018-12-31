@@ -2030,45 +2030,35 @@ public:
 	bool isMatch(string s, string p) {
 		int lens = s.size();
 		int lenp = p.size();
-		int i = 0, j = 0;
-		while (i != lens && j != lenp)
+		int i = 0, j = 0, lastp = -1, lasts = -1;
+		
+		while (i < lens)
 		{
-			if (s[i] != p[j] && (p[j] != '*' || p[j] != '?'))
-			{
-				return false;
-			}
-			else if (p[j] == '*')
-			{
-				if (j = lenp - 1)
-				{
-					return true;
-				}
-				else if (i == lens - 1)
-				{
-					return false;
-				}
-				else
-				{
-					if (p[j + 1] == '*')
-					{
-						j++;
-					}
-					else if (p[j + 1] == '?')
-					{
-						i++;
-						j++;
-					}
-					else
-					{
-						s.find(p[j + 1], i);
-					}
-				}
-			}
-			else //s[i] == p[j] || p[j] == '?'
+			if (s[i] == p[j] || p[j] == '?')
 			{
 				i++;
 				j++;
+				continue;
 			}
+			if (p[j] == '*')
+			{
+				lastp = j++;
+				lasts = i;
+				continue;
+			}
+			if (lastp != -1) //s[i] != p[j] backtrace
+			{
+				j = lastp + 1;
+				i = ++lasts;
+				continue;
+			}
+			return false;
 		}
+		while (j < lenp && p[j] == '*')
+		{
+			j++;
+		}
+		
+		return j == lenp;
 	}
 };

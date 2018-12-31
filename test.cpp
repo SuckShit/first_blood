@@ -1334,5 +1334,10 @@ int main()
 	SolutionLC42 s42;
 	missing = s42.trap(nums);
 
+	SolutionLC44 s44;
+	string source = "adceb";
+	string pattern = "*a*b";
+	bres = s44.isMatch(source, pattern);
+
 	return 0;
 }
