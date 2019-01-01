@@ -1343,5 +1343,12 @@ int main()
 	//nums = { 3 ,1 ,0, 0 };
 	SolutionLC45 s45;
 	missing = s45.jump(nums);
+	int cinn;
+	cin >> cinn;
+	const int xxx = cinn;
+	//constexpr int xxxx = cinn;
+
+	void *p = my_nullptr;
+	tmpnullptrtest(p);
 	return 0;
 }
