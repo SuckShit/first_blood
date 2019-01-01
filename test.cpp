@@ -1339,5 +1339,9 @@ int main()
 	string pattern = "*a*b";
 	bres = s44.isMatch(source, pattern);
 
+	nums = { 5,9,3,2,1,0,2,3,3,1,0,0};
+	//nums = { 3 ,1 ,0, 0 };
+	SolutionLC45 s45;
+	missing = s45.jump(nums);
 	return 0;
 }

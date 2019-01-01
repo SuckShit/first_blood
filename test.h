@@ -2062,3 +2062,58 @@ public:
 		return j == lenp;
 	}
 };
+
+class SolutionLC45 {//-1 初始 -2 不可到达
+public:
+	vector<int> record;
+	int findminlen(int start, vector<int>& nums, int n){
+		if (start >= n - 1) {
+			return 0;
+		}
+		if (nums[start] == 0)
+		{
+			record[start] = -2;
+			return -2;
+		}	
+		int min = -1;
+		for (int i = 1; i <= nums[start]; i++) {
+			int tmp = record[start + i] == -1 ? findminlen(start + i, nums, n) : record[start + i];
+			if (min == -1)
+			{
+				min = tmp;
+			}
+			else
+			{
+				tmp == -2 ? min = min + 0 : (min == -2 ? min = tmp : (tmp < min ? min = tmp : tmp = tmp + 0));
+			}
+		}
+		record[start] = (min == -2 ? min : min + 1);
+		return record[start];
+	}
+	int jump(vector<int>& nums) {
+		int len = nums.size();
+		if (len == 0 || len == 1) {
+			return 0;
+		}
+		vector<int>(len, -1).swap(record);
+		record[len - 1] = 0;
+		return findminlen(0, nums, len);
+	}
+};
+//the sulotion above for lc45 is very foolish, do not use dp, use greed is better
+class SolutionLC45case2 {
+public:
+	int jump(vector<int>& nums) {
+		int curend = 0, farthest = 0, jumps = 0;
+		for (int i = 0; i < nums.size() - 1; i++)
+		{
+			farthest = max(farthest, i + nums[i]);
+			if (i == curend)
+			{
+				jumps++;
+				curend = farthest;
+			}
+		}
+		return jumps;
+	}
+};
