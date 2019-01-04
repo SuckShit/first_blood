@@ -1343,12 +1343,35 @@ int main()
 	//nums = { 3 ,1 ,0, 0 };
 	SolutionLC45 s45;
 	missing = s45.jump(nums);
-	int cinn;
-	cin >> cinn;
-	const int xxx = cinn;
+	//int cinn;
+	//cin >> cinn;
+	//const int xxx = cinn;
 	//constexpr int xxxx = cinn;
 
-	void *p = my_nullptr;
-	tmpnullptrtest(p);
+	//void *pppp = my_nullptr;
+	//tmpnullptrtest(p);
+
+	//MyObj bcsasd = *(new MyObj());
+	//bcsasd.setnum(10);
+
+	//INT32* pint32 = new INT32[2];
+	//pint32[0] = 0x1111;
+	//pint32[1] = 0x2222;
+	//INT64 int64num1 = pint32[0];
+	//INT64 int64num2 = pint32[1];
+
+	//int whate = atoi("11u");
+
+	SolutionLC51 lc51;
+	vector<vector<string>> vecres = lc51.solveNQueens(4);
+	missing = 0;
+	for (auto i : vecres)
+	{
+		cout << "solution " << missing++ << ":" << endl;
+		for (auto j : i)
+		{
+			cout << j << endl;
+		}
+	}
 	return 0;
 }

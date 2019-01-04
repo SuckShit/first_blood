@@ -331,6 +331,10 @@ public:
 	{
 		cout << "MyObj destructor." << endl;
 	}
+	void setnum(int x)
+	{
+		whatever = x;
+	}
 private:
 	int whatever;
 
@@ -2158,3 +2162,75 @@ void tmpnullptrtest(Ptr ptr)
 {
 	return fnullptrtest(ptr);
 }
+
+class SolutionLC51 {
+private:
+	vector<vector<int>> chessboard;
+	int nqueens;
+	vector<vector<string>> solves;
+
+public:
+	void trytofill(int n)//n : no.n row
+	{
+		if (n == nqueens)
+		{
+			vector<string> vectmp;
+			for (int i = 0; i < n; i++)
+			{
+				string tmp("");
+				for (int j = 0; j < n; j++)
+				{
+					tmp += (chessboard[i][j] == 0 ? "." : "Q");
+				}
+				vectmp.push_back(tmp);
+			}
+			solves.push_back(vectmp);
+			return;
+		}
+
+		for (int i = 0; i < nqueens; i++)//try to set a queen in this row
+		{
+			if (checkpos(n, i))
+			{
+				chessboard[n][i] = 1;
+				trytofill(n + 1);
+				chessboard[n][i] = 0;
+			}
+		}
+		//no queen in this row
+		return;
+	}
+	bool checkpos(int m, int n)
+	{
+		for (int i = 0; i < m; i++)
+		{
+			if (chessboard[i][n] == 1)
+			{
+				return false;
+			}
+		}
+		for (int i = m, j = n; i >= 0 && j >= 0; i--, j--)
+		{
+			if (chessboard[i][j] == 1)
+			{
+				return false;
+			}
+		}
+		for (int i = m, j = n; i >= 0 && j < nqueens; i--, j++)
+		{
+			if (chessboard[i][j] == 1)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	vector<vector<string>> solveNQueens(int n) 
+	{
+		vector<vector<int>>(n, vector<int>(n, 0)).swap(chessboard);
+		nqueens = n;
+
+		trytofill(0);
+		return solves;
+	}
+};
