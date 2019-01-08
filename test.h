@@ -2194,7 +2194,7 @@ public:
 			{
 				chessboard[n][i] = 1;
 				trytofill(n + 1);
-				chessboard[n][i] = 0;
+				chessboard[n][i] = 0;//try every position
 			}
 		}
 		//no queen in this row
@@ -2232,5 +2232,29 @@ public:
 
 		trytofill(0);
 		return solves;
+	}
+};
+
+//Leetcode 57
+ struct Interval {
+      int start;
+      int end;
+      Interval() : start(0), end(0) {}
+      Interval(int s, int e) : start(s), end(e) {}
+ };
+ 
+class SolutionLC57 {
+private:
+	vector<Interval> *res;
+public:
+	int findornot(int start, int end, int x)
+	{
+
+	}
+	vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+		res = &intervals;
+		int intvallen = intervals.size();
+		int start = 0, end = intvallen - 1, mid = intvallen / 2;
+
 	}
 };

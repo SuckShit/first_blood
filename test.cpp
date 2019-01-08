@@ -1373,5 +1373,8 @@ int main()
 			cout << j << endl;
 		}
 	}
+	
+	char* cp = new char[24];
+	cp = (char*)((unsigned long)cp & -16L);
 	return 0;
 }
