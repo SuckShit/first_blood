@@ -2244,17 +2244,43 @@ public:
  };
  
 class SolutionLC57 {
-private:
-	vector<Interval> *res;
 public:
-	int findornot(int start, int end, int x)
-	{
-
-	}
 	vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
-		res = &intervals;
-		int intvallen = intervals.size();
-		int start = 0, end = intvallen - 1, mid = intvallen / 2;
+		vector<Interval>::iterator vi = intervals.begin();
+		vector<Interval> res;
 
+		while (vi != intervals.end())
+		{
+			if (newInterval.start > vi->end)
+			{
+				res.push_back(*vi);
+				vi++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		while (vi != intervals.end())
+		{
+			if (newInterval.end >= vi->start)//newInterval.start < vi->end
+			{
+
+				newInterval.start = min(vi->start, newInterval.start);
+				newInterval.end = max(vi->end, newInterval.end);
+				vi++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		res.push_back(newInterval);
+		while (vi != intervals.end())
+		{
+			res.push_back(*(vi++));
+		}
+		return res;
 	}
 };

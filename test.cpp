@@ -1374,7 +1374,11 @@ int main()
 		}
 	}
 	
-	char* cp = new char[24];
-	cp = (char*)((unsigned long)cp & -16L);
+	//char* cp = new char[24];
+	//cp = (char*)((unsigned long)cp & -16L);
+	SolutionLC57 s57;
+	vector<Interval> ints{ {1, 2}, {3, 5}, {6, 7}, {8, 10}, {12, 16}};
+	Interval oneint{ 4, 8 };
+	vector<Interval> resinterval = s57.insert(ints, oneint);
 	return 0;
 }
