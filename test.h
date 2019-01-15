@@ -24,6 +24,7 @@
 #include <condition_variable>
 #include <bitset>
 #include <iomanip>
+#include <process.h>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
@@ -2284,3 +2285,75 @@ public:
 		return res;
 	}
 };
+namespace MyTimeWheel {
+	//time wheel
+#define MAX_TIME_WHEEL 60
+	struct TaskToDo
+	{
+		int runjob() {}
+	};
+
+	struct TimeOutItemT
+	{
+		TimeOutItemT *prev;
+		TimeOutItemT *next;
+
+		unsigned long long expiretm;
+		shared_ptr<TaskToDo> pTask;
+	};
+
+	struct TimeOutLinkT
+	{
+		TimeOutItemT *head;
+		TimeOutItemT *tail;
+	};
+	struct MyThread
+	{
+		HANDLE _handle;
+		virtual void run() = 0;
+		void start()
+		{
+			unsigned int id;
+			_handle = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, starthook, this, 0, &id));
+		}
+		static unsigned int
+			WINAPI starthook(void* p)
+		{
+			MyThread *pt = static_cast<MyThread*>(p);
+			pt->run();
+			return 0;
+		}
+	};
+	struct TimeOutT:MyThread
+	{
+		TimeOutLinkT *pTmLk;
+		int timesize;
+		int curpos;
+		bool runflag;
+		condition_variable cv;
+		mutex cv_m;
+
+		TimeOutT(int t) 
+		{ 
+			t > 0 && t < MAX_TIME_WHEEL ? timesize = t : timesize = MAX_TIME_WHEEL; 
+			pTmLk = new TimeOutLinkT[timesize]; 
+			runflag = true; 
+		}
+		~TimeOutT() {
+			if (pTmLk == nullptr)
+			{
+				delete[] pTmLk;
+				pTmLk = nullptr;
+			}
+		}
+
+		void run()
+		{
+			while (runflag)
+			{
+				unique_lock<mutex> lk(cv_m);
+				cv.wait_for(lk, 1000ms);
+			}
+		}
+	};
+}
