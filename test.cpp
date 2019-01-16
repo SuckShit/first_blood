@@ -1381,8 +1381,130 @@ int main()
 	Interval oneint{ 4, 8 };
 	vector<Interval> resinterval = s57.insert(ints, oneint);
 
-#if 1
+#if 0
+	WORD wVersionRequested;
+	WSADATA wsaData;
+	wVersionRequested = MAKEWORD(2, 2);
+	WSAStartup(wVersionRequested, &wsaData);
+	int g_nThread = 0;
+	HANDLE hThread[50];
+	DWORD dwBytes = 0;
+	SYSTEM_INFO mysysteminfo;
+	GetSystemInfo(&mysysteminfo);
 
+	HANDLE hport = CreateIoCompletionPort(INVALID_HANDLE_VALUE, nullptr, 0, mysysteminfo.dwNumberOfProcessors);
+
+	for (DWORD i = 0; i < mysysteminfo.dwNumberOfProcessors * 2; i++)
+	{
+		//create thread to work
+		unsigned int id;
+		HANDLE _handle = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, starthook, (void*)&hport, 0, &id));
+		if (nullptr == _handle) {
+			cerr << "Create Thread Handle failed. Error:" << GetLastError() << endl;
+			return -1;
+		}
+		hThread[i] = _handle;
+		++g_nThread;
+	}
+	SOCKET srvSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
+
+
+	// Associate SOCKET with IOCP  
+	if (NULL == CreateIoCompletionPort((HANDLE)srvSocket, hport, NULL, 0))
+	{
+		cout << "CreateIoCompletionPort failed with error code: " << WSAGetLastError() << endl;
+		if (INVALID_SOCKET != srvSocket)
+		{
+			closesocket(srvSocket);
+			srvSocket = INVALID_SOCKET;
+		}
+		return -1;
+	}
+
+	SOCKADDR_IN srvAddr;
+	srvAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
+	srvAddr.sin_family = AF_INET;
+	srvAddr.sin_port = htons(11111);
+	int bindResult = ::bind(srvSocket, (SOCKADDR*)&srvAddr, sizeof(SOCKADDR));
+	if (SOCKET_ERROR == bindResult) {
+		cerr << "Bind failed. Error:" << GetLastError() << endl;
+		return -1;
+	}
+
+	int listenResult = listen(srvSocket, 10);
+	if (SOCKET_ERROR == listenResult) {
+		cerr << "Listen failed. Error: " << GetLastError() << endl;
+		return -1;
+	}
+
+	cout << "ready to serve...\n";
+
+	for (int i = 0; i < 10; ++i)
+	{
+
+		PER_HANDLE_DATA * PerHandleData = NULL;
+		SOCKET acceptSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
+		if (INVALID_SOCKET == acceptSocket)
+		{
+			cerr << "WSASocket failed with error code: %d/n" << WSAGetLastError() << endl;
+			return FALSE;
+		}
+
+		LPPER_IO_OPERATION_DATA PerIoData = NULL;
+		PerIoData = (LPPER_IO_OPERATION_DATA)GlobalAlloc(GPTR, sizeof(PER_IO_OPERATEION_DATA));
+		ZeroMemory(&(PerIoData->overlapped), sizeof(OVERLAPPED));
+		PerIoData->databuff.len = 1024;
+		PerIoData->databuff.buf = PerIoData->buffer;
+		PerIoData->operationType = ACCEPT;  // read
+		PerIoData->client = acceptSocket;
+
+		if (SOCKET_ERROR == WSAIoctl(srvSocket, SIO_GET_EXTENSION_FUNCTION_POINTER, &guidAcceptEx, sizeof(guidAcceptEx), &lpfnAcceptEx,
+			sizeof(lpfnAcceptEx), &dwBytes, NULL, NULL))
+		{
+			cerr << "WSAIoctl failed with error code: " << WSAGetLastError() << endl;
+			if (INVALID_SOCKET != srvSocket)
+			{
+				closesocket(srvSocket);
+				srvSocket = INVALID_SOCKET;
+			}
+			//goto EXIT_CODE;
+			return -1;
+		}
+
+		if (SOCKET_ERROR == WSAIoctl(srvSocket, SIO_GET_EXTENSION_FUNCTION_POINTER, &GuidGetAcceptExSockAddrs,
+			sizeof(GuidGetAcceptExSockAddrs), &lpfnGetAcceptExSockAddrs, sizeof(lpfnGetAcceptExSockAddrs),
+			&dwBytes, NULL, NULL))
+		{
+			cerr << "WSAIoctl failed with error code: " << WSAGetLastError() << endl;
+			if (INVALID_SOCKET != srvSocket)
+			{
+				closesocket(srvSocket);
+				srvSocket = INVALID_SOCKET;
+			}
+			//goto EXIT_CODE;
+			return -1;
+		}
+
+		if (FALSE == lpfnAcceptEx(srvSocket, PerIoData->client, PerIoData->databuff.buf, PerIoData->databuff.len - ((sizeof(SOCKADDR_IN) + 16) * 2),
+			sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, &dwBytes, &(PerIoData->overlapped)))
+		{
+			if (WSA_IO_PENDING != WSAGetLastError())
+			{
+				cerr << "lpfnAcceptEx failed with error code: " << WSAGetLastError() << endl;
+
+				return FALSE;
+			}
+		}
+
+
+	}
+
+
+	Sleep(1000 * 60 * 60);
+	PostQueuedCompletionStatus(hport, 0, NULL, NULL);
+	WaitForMultipleObjects(g_nThread, hThread, TRUE, INFINITE);
+
+	WSACleanup();
 #endif
 
 	return 0;

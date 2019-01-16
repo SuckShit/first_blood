@@ -1,4 +1,5 @@
-﻿#include <utility>
+﻿#include <WinSock2.h>
+#include <utility>
 #include <algorithm>
 #include <iostream>
 #include <stdlib.h>
@@ -25,12 +26,43 @@
 #include <bitset>
 #include <iomanip>
 #include <process.h>
+#include <MSWSock.h>
 #include "Impl.h"
 //#include <boost/filesystem.hpp>
 using namespace std;
 using namespace placeholders;
 //using boost::typeindex::type_id_with_cvr;
 #pragma comment(lib,"Dbghelp.lib")
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Kernel32.lib")
+
+#define SEND 0
+#define RECV 1
+#define ACCEPT 2
+
+#define MAXDATABUFSIZE  2 * 1024
+
+LPFN_ACCEPTEX lpfnAcceptEx = NULL;//AcceptEx函数指针
+GUID guidAcceptEx = WSAID_ACCEPTEX;
+GUID GuidGetAcceptExSockAddrs = WSAID_GETACCEPTEXSOCKADDRS;
+LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockAddrs = NULL;
+
+typedef struct
+{
+	OVERLAPPED overlapped;
+	WSABUF databuff;
+	char buffer[MAXDATABUFSIZE];
+	int BufferLen;
+	int operationType;
+	SOCKET client;
+}PER_IO_OPERATEION_DATA, *LPPER_IO_OPERATION_DATA, *LPPER_IO_DATA, PER_IO_DATA;
+
+typedef struct
+{
+	SOCKET socket;
+	SOCKADDR_STORAGE ClientAddr;
+}PER_HANDLE_DATA, *LPPER_HANDLE_DATA;
+
 
 class BaseCs
 {
@@ -2285,75 +2317,144 @@ public:
 		return res;
 	}
 };
-namespace MyTimeWheel {
-	//time wheel
-#define MAX_TIME_WHEEL 60
-	struct TaskToDo
-	{
-		int runjob() {}
-	};
-
-	struct TimeOutItemT
-	{
-		TimeOutItemT *prev;
-		TimeOutItemT *next;
-
-		unsigned long long expiretm;
-		shared_ptr<TaskToDo> pTask;
-	};
-
-	struct TimeOutLinkT
-	{
-		TimeOutItemT *head;
-		TimeOutItemT *tail;
-	};
-	struct MyThread
-	{
-		HANDLE _handle;
-		virtual void run() = 0;
-		void start()
-		{
-			unsigned int id;
-			_handle = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, starthook, this, 0, &id));
-		}
-		static unsigned int
-			WINAPI starthook(void* p)
-		{
-			MyThread *pt = static_cast<MyThread*>(p);
-			pt->run();
-			return 0;
-		}
-	};
-	struct TimeOutT:MyThread
-	{
-		TimeOutLinkT *pTmLk;
-		int timesize;
-		int curpos;
-		bool runflag;
-		condition_variable cv;
-		mutex cv_m;
-
-		TimeOutT(int t) 
-		{ 
-			t > 0 && t < MAX_TIME_WHEEL ? timesize = t : timesize = MAX_TIME_WHEEL; 
-			pTmLk = new TimeOutLinkT[timesize]; 
-			runflag = true; 
-		}
-		~TimeOutT() {
-			if (pTmLk == nullptr)
-			{
-				delete[] pTmLk;
-				pTmLk = nullptr;
-			}
-		}
-
-		void run()
-		{
-			while (runflag)
-			{
-				unique_lock<mutex> lk(cv_m);
-				cv.wait_for(lk, 1000ms);
-			}
-		}
-	};
-}
+//namespace MyTimeWheel {
+//	//time wheel
+//#define MAX_TIME_WHEEL 60
+//	struct TaskToDo
+//	{
+//		int runjob() {}
+//	};
+//
+//	struct TimeOutItemT
+//	{
+//		TimeOutItemT *prev;
+//		TimeOutItemT *next;
+//
+//		unsigned long long expiretm;
+//		shared_ptr<TaskToDo> pTask;
+//	};
+//
+//	struct TimeOutLinkT
+//	{
+//		TimeOutItemT *head;
+//		TimeOutItemT *tail;
+//	};
+//
+//	struct TimeOutT
+//	{
+//		TimeOutLinkT *pTmLk;
+//		int timesize;
+//		int curpos;
+//		bool runflag;
+//		condition_variable cv;
+//		mutex cv_m;
+//
+//		TimeOutT(int t) 
+//		{ 
+//			t > 0 && t < MAX_TIME_WHEEL ? timesize = t : timesize = MAX_TIME_WHEEL; 
+//			pTmLk = new TimeOutLinkT[timesize]; 
+//			runflag = true; 
+//		}
+//		~TimeOutT() {
+//			if (pTmLk == nullptr)
+//			{
+//				delete[] pTmLk;
+//				pTmLk = nullptr;
+//			}
+//		}
+//	};
+//}
+//
+//static unsigned int WINAPI starthook(void* IpParam)
+//{
+//	HANDLE CompletionPort = *(HANDLE*)(IpParam);
+//	DWORD BytesTransferred;
+//	LPOVERLAPPED IpOverlapped;
+//	LPPER_HANDLE_DATA PerHandleData = NULL;
+//	LPPER_IO_DATA PerIoData = NULL;
+//	DWORD RecvBytes = 0;
+//	DWORD Flags = 0;
+//	BOOL bRet = false;
+//
+//	while (true) {
+//		bRet = GetQueuedCompletionStatus(CompletionPort, &BytesTransferred, (PULONG_PTR)&PerHandleData, (LPOVERLAPPED*)&IpOverlapped, 100);
+//		if (bRet == 0) {
+//			if (WAIT_TIMEOUT == GetLastError())
+//			{
+//				//advance time wheel
+//			}
+//			// Error
+//			cout << "GetQueuedCompletionStatus failed with error:" << GetLastError() << endl;
+//			continue;
+//		}
+//		PerIoData = (LPPER_IO_DATA)CONTAINING_RECORD(IpOverlapped, PER_IO_DATA, overlapped);
+//
+//		if (NULL == PerIoData)
+//		{
+//			// Exit thread  
+//			break;
+//		}
+//
+//		if (0 == BytesTransferred && (PerIoData->operationType == RECV || PerIoData->operationType == SEND))
+//		{
+//			closesocket(PerHandleData->socket);
+//			GlobalFree(PerHandleData);
+//			GlobalFree(PerIoData);
+//			continue;
+//		}
+//
+//		switch (PerIoData->operationType)
+//		{
+//		case ACCEPT:
+//		{
+//			//add to time wheel
+//			SOCKADDR_IN* remote = NULL;
+//			SOCKADDR_IN* local = NULL;
+//			int remoteLen = sizeof(SOCKADDR_IN);
+//			int localLen = sizeof(SOCKADDR_IN);
+//			lpfnGetAcceptExSockAddrs(PerIoData->databuff.buf, PerIoData->databuff.len - ((sizeof(SOCKADDR_IN) + 16) * 2),
+//				sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, (LPSOCKADDR*)&local, &localLen, (LPSOCKADDR*)&remote, &remoteLen);
+//
+//			if (setsockopt(PerIoData->client, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT,
+//				(char*)&(PerHandleData->socket), sizeof(PerHandleData->socket)) == SOCKET_ERROR)
+//				cout << "setsockopt..." << endl;
+//
+//			PerHandleData = (LPPER_HANDLE_DATA)GlobalAlloc(GPTR, sizeof(PER_HANDLE_DATA));  // 在堆中为这个PerHandleData申请指定大小的内存
+//			PerHandleData->socket = PerIoData->client;
+//
+//			CreateIoCompletionPort((HANDLE)PerHandleData->socket,
+//				CompletionPort, (ULONG_PTR)PerHandleData, 0);
+//
+//			memset(&(PerIoData->overlapped), 0, sizeof(OVERLAPPED));
+//			PerIoData->operationType = RECV;  
+//												
+//			PerIoData->databuff.buf = PerIoData->buffer;
+//			PerIoData->databuff.len = PerIoData->BufferLen = 1024;
+//
+//			cout << "wait for data arrive(Accept)..." << endl;
+//			Flags = 0;
+//			if (WSARecv(PerHandleData->socket, &(PerIoData->databuff), 1,
+//				&RecvBytes, &Flags, &(PerIoData->overlapped), NULL) == SOCKET_ERROR)
+//				if (WSAGetLastError() == WSA_IO_PENDING)
+//					cout << "WSARecv Pending..." << endl;
+//
+//			continue;
+//		}
+//		break;
+//		case RECV:
+//			cout << "A Client says: " << PerIoData->databuff.buf << endl;
+//
+//			ZeroMemory(&(PerIoData->overlapped), sizeof(OVERLAPPED)); 
+//			PerIoData->databuff.len = 1024;
+//			PerIoData->databuff.buf = PerIoData->buffer;
+//			PerIoData->operationType = RECV;    // read
+//			WSARecv(PerHandleData->socket, &(PerIoData->databuff), 1, &RecvBytes, &Flags, &(PerIoData->overlapped), NULL);
+//
+//			continue;
+//			break;
+//		default:
+//			break;
+//		}
+//	}
+//	return 0;
+//}
