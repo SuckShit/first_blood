@@ -1506,6 +1506,9 @@ int main()
 
 	WSACleanup();
 #endif
-
+	SolutionLC84 lc84;
+	vector<int> height{ 2,1,5,6,2,3 };
+	missing = lc84.largestRectangleArea(height);
+	
 	return 0;
 }
