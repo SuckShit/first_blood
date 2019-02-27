@@ -2497,3 +2497,35 @@ public:
 		return dp[m][n];
 	}
 };
+
+//LC 76
+class SolutionLC76 {
+public:
+	string minWindow(string s, string t) {
+		vector<int> map(128, 0);
+		for (auto c : t)
+		{
+			map[c]++;
+		}
+		int begin = 0, end = 0, len = INT_MAX, minlen = 0, head = 0;
+		int count = t.length();
+		while (end < s.length())
+		{
+			if (map[s[end++]]-- > 0)
+				count--;
+			while (count == 0)
+			{
+				if (len > end - begin)
+				{
+					len = end - begin;
+					head = begin;
+				}
+				if (map[s[begin++]]++ == 0)
+				{
+					count++;
+				}
+			}
+		}
+		return len == INT_MAX ? "" : s.substr(head, len);
+	}
+};
