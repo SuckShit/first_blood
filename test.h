@@ -2567,3 +2567,91 @@ public:
 		return max;
 	}
 };
+//left[i][j] means the left boundary of current position [i,j], it depends on the current row and previous row
+//   left[i][j] = max(left[i-1][j], curleft)
+//right[i][j] means the right boundary of current position [i,j], it depends on the current row and previous row
+//   right[i][j] = min(right[i-1][j], curright)
+//height[i][j] = matrix[i][j] == 0 ? 0 : height[i-1][j] + 1
+class SolutionLC85 {
+public:
+	int maximalRectangle(vector<vector<char>>& matrix) {
+		if (matrix.size() == 0)
+			return 0;
+		int rows = matrix.size();
+		int cols = matrix[0].size();
+		int max = 0;
+		vector<vector<int>> left(rows, vector<int>(cols, -1)), right(rows, vector<int>(cols, cols)), height(rows, vector<int>(cols, 0));
+		for (int i = 0; i < rows; i++)
+		{
+			int curleft = -1, curright = cols;
+			for (int j = 0; j < cols; j++)
+			{
+				if (matrix[i][j] == '1')
+				{
+					left[i][j] = curleft + 1;
+					height[i][j] = 1;
+					int p = i - 1;
+					if (p >= 0)
+					{
+						left[i][j] = left[i][j] > left[p][j] ? left[i][j] + 0 : left[p][j];
+						height[i][j] = height[p][j] + 1;
+					}
+				}
+				else
+				{
+					curleft = j;
+					height[i][j] = 0;
+				}
+			}
+			for (int j = cols - 1; j >= 0; j--)
+			{
+				if (matrix[i][j] == '1')
+				{
+					right[i][j] = curright - 1;
+					int p = i - 1;
+					if (p >= 0)
+					{
+						right[i][j] = right[i][j] <= right[p][j] ? right[i][j] + 0 : right[p][j];
+					}
+				}
+				else
+				{
+					curright = j;
+				}
+			}
+		}
+
+		cout << "!!!!!!!!!left:" << endl;
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < cols; j++)
+			{
+				cout << setw(4) << left[i][j];
+			}
+			cout << endl;
+		}
+
+		cout << "!!!!!!!!!right:" << endl;
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < cols; j++)
+			{
+				cout << setw(4) << right[i][j];
+			}
+			cout << endl;
+		}
+
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < cols; j++)
+			{
+				if(matrix[i][j])
+				{ 
+					int tmp = (right[i][j] - left[i][j] + 1) * height[i][j];
+					max = tmp > max ? tmp : max + 0;
+				}
+			}
+		}
+		return max;
+	}
+};
