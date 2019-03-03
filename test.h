@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <vector>
+#include <stack>
+#include <queue>
 #include <string>
 #include <thread>
 #include <future>
@@ -2653,5 +2655,160 @@ public:
 			}
 		}
 		return max;
+	}
+};
+
+class SolutionLC97 {
+public:
+	bool isInterleave(string s1, string s2, string s3) {
+		struct  position
+		{
+			int pos1;
+			int pos2;
+			int pos3;
+		};
+		stack<position> backtrace;
+		int lenA = s1.size(), lenB = s2.size(), lenC = s3.size();
+		if (lenC != lenA + lenB)
+		{
+			return false;
+		}
+
+		int i = 0, j = 0, k = 0;
+		bool flag = false;
+		while (k < lenC)
+		{
+			if (i < lenA && j < lenB)
+			{
+				if (s1[i] != s2[j] && s1[i] == s3[k])
+				{
+					i++;
+					k++;
+				}
+				else if (s1[i] != s2[j] && s2[j] == s3[k])
+				{
+					j++;
+					k++;
+				}
+				else if (s1[i] == s2[j] && s1[i] == s3[k])
+				{
+					if (!flag)
+					{
+						position pos;
+						pos.pos1 = i++;
+						pos.pos2 = j;
+						pos.pos3 = k++;
+						backtrace.push(pos);
+					}
+					else
+					{
+						j++;
+						k++;
+						flag = false;
+					}
+				}
+				else
+				{
+					if (backtrace.empty())
+					{
+						return false;
+					}
+					position pos = backtrace.top();
+					backtrace.pop();
+					flag = true;
+					i = pos.pos1;
+					j = pos.pos2;
+					k = pos.pos3;
+				}
+			}
+			else if(i < lenA)
+			{
+				if (s1[i++] != s3[k++])
+				{
+					if (backtrace.empty())
+					{
+						return false;
+					}
+					position pos = backtrace.top();
+					backtrace.pop();
+					flag = true;
+					i = pos.pos1;
+					j = pos.pos2;
+					k = pos.pos3;
+				}
+			}
+			else if(j < lenB)
+			{
+				if (s2[j++] != s3[k++])
+				{
+					if (backtrace.empty())
+					{
+						return false;
+					}
+					position pos = backtrace.top();
+					backtrace.pop();
+					flag = true;
+					i = pos.pos1;
+					j = pos.pos2;
+					k = pos.pos3;
+				}
+			}
+		}
+		return true;
+	}
+};
+
+struct MyPoint {
+	int y, x;
+	bool operator==(const MyPoint &p) const {
+		return p.y == y && p.x == x;
+	}
+};
+namespace std {
+	template <>
+	struct hash<MyPoint> {
+		size_t operator () (const MyPoint &f) const {
+			return (std::hash<int>()(f.x) << 1) ^ std::hash<int>()(f.y);
+		}
+	};
+}
+
+class SolutionLC97B {
+public:
+	bool isInterleave(string s1, string s2, string s3) {
+		if (s1.size() + s2.size() != s3.size()) return false;
+
+		queue<MyPoint> q;
+		unordered_set<MyPoint> visited;
+		bool isSuccessful = false;
+		int i = 0;
+
+		q.push(MyPoint{ 0, 0 });
+		q.push(MyPoint{ -1, -1 });
+		while (!(1 == q.size() && -1 == q.front().x)) {
+			auto p = q.front();
+			q.pop();
+			if (p.y == s1.size() && p.x == s2.size()) {
+				return true;
+			}
+			if (-1 == p.y) {
+				q.push(p);
+				i++;
+				continue;
+			}
+			if (visited.find(p) != visited.end()) 
+			{ continue; }
+			visited.insert(p);
+
+			if (p.y < s1.size()) { // down
+				if (s1[p.y] == s3[i]) 
+				{ q.push(MyPoint{ p.y + 1, p.x }); }
+			}
+			if (p.x < s2.size()) { // right 
+				if (s2[p.x] == s3[i]) 
+				{ q.push(MyPoint{ p.y, p.x + 1 }); }
+			}
+		}
+		return false;
 	}
 };

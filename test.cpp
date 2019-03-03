@@ -1523,5 +1523,12 @@ int main()
 {'0','1','0','1','1','0','1','0','1','1'} };
 
 	missing = lc85.maximalRectangle(matrix);
+
+	string s1 = "abac";
+	string s2 = "adaeaf";
+	string s3 = "adaeabafac";
+	SolutionLC97B lc97;
+	bres = lc97.isInterleave(s1, s2, s3);
+
 	return 0;
 }
