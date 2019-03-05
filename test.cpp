@@ -1530,5 +1530,11 @@ int main()
 	SolutionLC97B lc97;
 	bres = lc97.isInterleave(s1, s2, s3);
 
+	SolutionLC99 lc99;
+	TreeNode* root = nullptr;
+	char nodes[6] = { 3, 1, 4, '0', '0', 2 };
+	constructTree(&root, nodes, 6);
+	lc99.recoverTree(root);
+	destructTree(root);
 	return 0;
 }

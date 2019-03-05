@@ -2812,3 +2812,114 @@ public:
 		return false;
 	}
 };
+
+
+
+ struct TreeNode {
+      int val;
+      TreeNode *left;
+      TreeNode *right;
+      TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+  };
+ 
+class SolutionLC99 {
+public:
+	TreeNode* prev;
+	TreeNode* curr;
+	TreeNode* fst;
+	TreeNode* secnd;
+	void traverseTree(TreeNode* root)
+	{
+		if (root)
+		{
+			traverseTree(root->left);
+			if (prev && prev->val > root->val)
+			{
+				if (fst == nullptr)
+				{
+					fst = prev;
+				}
+				else
+				{
+					secnd = root;
+				}
+			}
+			if (prev && prev == fst)
+			{
+				curr = root;
+			}
+			prev = root;
+			traverseTree(root->right);
+		}
+	}
+	void recoverTree(TreeNode* root) {
+		prev = nullptr;
+		fst = nullptr;
+		secnd = nullptr;
+		traverseTree(root);
+		int tmp = fst->val;
+		if (secnd)
+		{
+			fst->val = secnd->val;
+			secnd->val = tmp;
+		}
+		else
+		{
+			fst->val = curr->val;
+			curr->val = tmp;
+		}
+	}
+};
+
+void constructTree(TreeNode** root, char* p, int size)
+{
+	std::queue<TreeNode*> nodelist;
+	if (size)
+	{
+		if (*p != '0')
+		{
+			*root = new TreeNode(int(*p));
+			nodelist.push(*root);
+		}
+		else
+		{
+			*root = nullptr;
+			return;
+		}
+		p++;
+		size--;
+		while (!nodelist.empty())
+		{
+			TreeNode* tmp = nodelist.front();
+			nodelist.pop();
+			if (size-- > 0)
+			{
+				if (*p != '0')
+				{
+					tmp->left = new TreeNode(int(*p));
+					nodelist.push(tmp->left);
+				}
+				p++;
+			}
+			if (size-- > 0)
+			{
+				if (*p != '0')
+				{
+					tmp->right = new TreeNode(int(*p));
+					nodelist.push(tmp->right);
+				}
+				p++;
+			}
+		}
+	}
+}
+void destructTree(TreeNode* root)
+{
+	if (root)
+	{
+		destructTree(root->left);
+		destructTree(root->right);
+		delete root;
+		root = nullptr;
+	}
+}
