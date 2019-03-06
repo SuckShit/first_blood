@@ -2923,3 +2923,34 @@ void destructTree(TreeNode* root)
 		root = nullptr;
 	}
 }
+
+class SolutionLC115 {
+public:
+	int numDistinct(string s, string t) {
+		int lens = s.length(), lent = t.length();
+		vector<vector<unsigned int>> dp(lens + 1, vector<unsigned int>(lent + 1, 0));
+		for (int i = 0; i <= lens; i++)
+		{
+			dp[i][0] = 1;
+		}
+		for (int i = 1; i <= lens; i++)
+		{
+			for (int j = 1; j <= lent; j++)
+			{
+				//if s[i] == t[j]
+				//case 1: we choose the jth character from s, so we also choose the ith character from t to correspond with(because if we do not choose the ith cha in t but a previus cha
+				//then it will break our hypothesis). So finally we cut the ith and the jth character from string both.
+				//case 2: we do not choose jth character from s, so the result is dp[i - 1][j]
+				if (s[i - 1] == t[j - 1])
+				{
+					dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+				}
+				else
+				{
+					dp[i][j] = dp[i - 1][j];
+				}
+			}
+		}
+		return dp[lens][lent];
+	}
+};

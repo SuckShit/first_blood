@@ -1536,5 +1536,10 @@ int main()
 	constructTree(&root, nodes, 6);
 	lc99.recoverTree(root);
 	destructTree(root);
+
+	SolutionLC115 lc115;
+	missing = lc115.numDistinct("babgbag", "bag");
+	missing = lc115.numDistinct2("babgbag", "bag");
+
 	return 0;
 }
