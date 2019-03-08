@@ -1539,7 +1539,10 @@ int main()
 
 	SolutionLC115 lc115;
 	missing = lc115.numDistinct("babgbag", "bag");
-	missing = lc115.numDistinct2("babgbag", "bag");
 
+	SolutionLC123 lc123;
+	vector<int> lc123para{ 3,3,5,0,0,3,1,4 };
+	missing = lc123.maxProfit(lc123para);
+	missing = lc123.maxProfit2(lc123para);
 	return 0;
 }

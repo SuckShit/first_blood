@@ -2954,3 +2954,46 @@ public:
 		return dp[lens][lent];
 	}
 };
+
+class SolutionLC123 {
+public:
+	//wonderful awesome genius perfect solution
+	int maxProfit(vector<int>& prices) {
+		int len = prices.size();
+		int buy1 = INT_MIN, buy2 = INT_MIN, sell1 = 0, sell2 = 0;
+		for (int i = 0; i < len; i++)
+		{
+			//if yesterday or before sell the 2nd stock and do nothing today or today sell the 2nd stock
+			sell2 = std::max<int>(sell2, buy2 + prices[i]);
+			//if yesterday or before buy 2nd stock and do nothing today or today buy the 2nd stock
+			buy2 = std::max<int>(buy2, sell1 - prices[i]);
+			//if yesterday or before sell 1st stock and do nothing today or sell 1st stock today
+			sell1 = std::max<int>(sell1, buy1 + prices[i]);
+			//if yesterday or before buy 1st stock and do nothing today or buy 1st stock today
+			buy1 = std::max<int>(buy1, -prices[i]);
+		}
+		return sell2;
+	}
+	int maxProfit2(vector<int>& prices) {
+		//say global[i][j] represents the max profits with j transactions in i days;
+		//say local[i][j] represents the max profit with j transactions in i days and the jth transaction occured on the ith day
+		//so global[i][j] = max(global[i - 1][j], local[i][j])
+		//local[i][j] = max(local[i - 1][j] + pri[i] - pri[i - 1], global[i - 1][j - 1] + pri[i] - pri[i - 1])
+		if (prices.empty())
+		{
+			return 0;
+		}
+		int len = prices.size();
+		vector<vector<int>> global(len, vector<int>(3, 0)), local(len, vector<int>(3, 0));
+		for (int i = 1; i < len; i++)
+		{
+			for (int j = 1; j < 3; j++)
+			{
+				int diff = prices[i] - prices[i - 1];
+				local[i][j] = std::max<int>(local[i - 1][j] + diff, global[i - 1][j - 1] + diff);
+				global[i][j] = std::max<int>(global[i - 1][j], local[i][j]);
+			}
+		}
+		return global[len - 1][2];
+	}
+};
