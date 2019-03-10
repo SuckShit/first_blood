@@ -1532,7 +1532,7 @@ int main()
 
 	SolutionLC99 lc99;
 	TreeNode* root = nullptr;
-	char nodes[6] = { 3, 1, 4, '0', '0', 2 };
+	char nodes[6] = { 1, 2, 3, '0', '0', '0' };
 	constructTree(&root, nodes, 6);
 	lc99.recoverTree(root);
 	destructTree(root);
@@ -1544,5 +1544,10 @@ int main()
 	vector<int> lc123para{ 3,3,5,0,0,3,1,4 };
 	missing = lc123.maxProfit(lc123para);
 	missing = lc123.maxProfit2(lc123para);
+
+	SolutionLC124 lc124;
+	constructTree(&root, nodes, 6);
+	missing = lc124.maxPathSum(root);
+	destructTree(root);
 	return 0;
 }

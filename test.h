@@ -2997,3 +2997,25 @@ public:
 		return global[len - 1][2];
 	}
 };
+
+class SolutionLC124 {
+private:
+	int maxsum;
+public:
+	SolutionLC124():maxsum(INT_MIN){}
+	int maxPathSum(TreeNode* root) {
+		maxPathSumHelper(root);
+		return maxsum;
+	}
+	int maxPathSumHelper(TreeNode* root)
+	{
+		if (!root)
+		{
+			return 0;
+		}
+		int left = maxPathSumHelper(root->left);
+		int right = maxPathSumHelper(root->right);
+		maxsum = std::max<int>(std::max<int>(0, left) + std::max<int>(0, right) + root->val, maxsum);
+		return std::max<int>(std::max<int>(left, right), 0) + root->val;
+	}
+};
