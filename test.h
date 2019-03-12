@@ -41,7 +41,7 @@ using namespace placeholders;
 #define SEND 0
 #define RECV 1
 #define ACCEPT 2
-
+#define COE 1000000
 #define MAXDATABUFSIZE  2 * 1024
 
 LPFN_ACCEPTEX lpfnAcceptEx = NULL;//AcceptEx函数指针
