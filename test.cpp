@@ -1549,11 +1549,22 @@ int main()
 	constructTree(&root, nodes, 6);
 	missing = lc124.maxPathSum(root);
 	destructTree(root);
+
 	const char* cp = "asd";
 	const char* cp2 = "asd";
 	const char cp3[4] = "asd";
 	const char cp4[4] = "asd";
 
 	INT64 _i64 = 10000 * COE;
+
+	unordered_set<string> wordlist;
+	wordlist.emplace("hot");
+	wordlist.emplace("dot");
+	wordlist.emplace("dog");
+	wordlist.emplace("lot");
+	wordlist.emplace("log");
+	wordlist.emplace("cog");
+	vector<vector<string>> ans = findLadders("hit", "cog", wordlist);
+
 	return 0;
 }
