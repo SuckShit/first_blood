@@ -3080,21 +3080,32 @@ class SolutionLC128 {
 public:
 	int longestConsecutive(vector<int>& nums) {
 		unordered_map<int, int> m;
+		int maxnum = 0;
+		int ret = 0;
 		for (auto n: nums)
 		{
 			if (m[n])
 			{
 				continue;
 			}
-			if (m.find(n+1) == m.end() && m.find(n-1) == m.end())
+			else if (m.find(n+1) == m.end() && m.find(n-1) == m.end())
 			{
-				m[n] = 1;
-				continue;
+				ret = m[n] = 1;
 			}
-			if (m.find(n+1)==m.end())
+			else if (m.find(n+1)==m.end())
 			{
-
+				ret = m[n - m[n - 1]] = m[n] = m[n - 1] + 1;
 			}
+			else if (m.find(n-1)==m.end())
+			{
+				ret = m[n + m[n + 1]] = m[n] = m[n + 1] + 1;
+			}
+			else
+			{
+				ret = m[n + m[n + 1]] = m[n - m[n - 1]] = m[n] = m[n + 1] + m[n - 1] + 1;
+			}
+			maxnum = std::max<int>(maxnum, ret);
 		}
+		return maxnum;
 	}
 };
