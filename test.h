@@ -3075,3 +3075,26 @@ vector<vector<string>> findLadders(string beginWord, string endWord, unordered_s
 	}
 	return ans;
 }
+
+class SolutionLC128 {
+public:
+	int longestConsecutive(vector<int>& nums) {
+		unordered_map<int, int> m;
+		for (auto n: nums)
+		{
+			if (m[n])
+			{
+				continue;
+			}
+			if (m.find(n+1) == m.end() && m.find(n-1) == m.end())
+			{
+				m[n] = 1;
+				continue;
+			}
+			if (m.find(n+1)==m.end())
+			{
+
+			}
+		}
+	}
+};
