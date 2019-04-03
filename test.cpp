@@ -1566,5 +1566,14 @@ int main()
 	wordlist.emplace("cog");
 	vector<vector<string>> ans = findLadders("hit", "cog", wordlist);
 
+	deque<int> di;
+	for (int i = 0; i < 20; i++)
+	{
+		di.push_back(i);
+	}
+	auto it = di.begin() + 5;
+	di.insert(it, 100);
+
+	missing = result(18);
 	return 0;
 }

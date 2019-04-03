@@ -13,6 +13,7 @@
 #include <windows.h>
 #include <functional>
 #include <list>
+#include <deque>
 #include <unordered_map>
 #include <unordered_set>
 #include <array>
@@ -3109,3 +3110,23 @@ public:
 		return maxnum;
 	}
 };
+
+int result(int x) {
+	if (x == 1)
+	{
+		return 0;
+	}
+	else if(x <= 0 || x % 2 != 0)
+	{
+		return -1;
+	}
+	int tmp = result(x >> 1);
+	if (tmp == -1)
+	{
+		return -1;
+	}
+	else
+	{
+		return 1 + tmp;
+	}
+}
