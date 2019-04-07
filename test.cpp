@@ -1575,5 +1575,12 @@ int main()
 	di.insert(it, 100);
 
 	missing = result(18);
+
+	std::promise<void> p_lock, p_reset;
+	auto ps = make_shared<BaseCs>();
+	std::thread trd1(thread_lock, &p_lock, &p_reset, ps);
+	std::thread trd2(thread_reset, &p_lock, &p_reset, ps);
+	trd1.join();
+	trd2.join();
 	return 0;
 }

@@ -3130,3 +3130,27 @@ int result(int x) {
 		return 1 + tmp;
 	}
 }
+
+void thread_lock(std::promise<void>* p_lock, std::promise<void>* p_reset, std::shared_ptr<BaseCs> p)
+{
+	std::weak_ptr<BaseCs> pw = p;
+	if (auto sf = pw.lock())
+	{
+		p_lock->set_value();
+		p_reset->get_future().get();
+		auto pc = sf.use_count();
+		cout << "thread_lock use count is " << pc << endl;
+	}
+	else
+	{
+		cout << "lock error" << endl;
+	}
+}
+
+void thread_reset(std::promise<void>* p_lock, std::promise<void>* p_reset, std::shared_ptr<BaseCs> p)
+{
+	p_lock->get_future().get();
+	cout << "thread_reset use count " << p.use_count() << endl;
+	p.reset();
+	p_reset->set_value();
+}
