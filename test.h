@@ -3154,3 +3154,54 @@ void thread_reset(std::promise<void>* p_lock, std::promise<void>* p_reset, std::
 	p.reset();
 	p_reset->set_value();
 }
+
+class SolutionLC132 {
+public:
+	int minCut(string s) {
+		int n = s.size();
+		vector<int> dp(n + 1, 0);
+		for (int i = 0; i <= n; i++)
+		{
+			dp[i] = i - 1;
+		}
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j <= i && i + j < n && s[i - j] == s[i + j]; j++)
+			{
+				dp[i + j + 1] = std::min<int>(dp[i + j + 1], 1 + dp[i - j]);
+			}
+			for (int j = 0; j <= i - 1 && i + j < n && s[i - j - 1] == s[i + j]; j++) 
+			{
+				dp[i + j + 1] = std::min<int>(dp[i + j + 1], 1 + dp[i - j - 1]);
+			}
+		}
+		return dp[n];
+	}
+};
+
+class SolutionLC131 {
+public:
+	vector<vector<string>> partition(string s) {
+		int n = s.size();
+		vector<vector<vector<string>>> result(n + 1);
+		result[0].push_back({});
+		vector<vector<bool>> dp(n, vector<bool>(n));
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j <= i; j++)
+			{
+				if (s[i] == s[j] && (i - j < 2 || dp[j + 1][i - 1]))
+				{
+					dp[j][i] = true;
+					auto str = s.substr(j, i - j + 1);
+					for (auto l : result[j])
+					{
+						l.push_back(str);
+						result[i + 1].push_back(l);
+					}
+				}
+			}
+		}
+		return result[n];
+	}
+};

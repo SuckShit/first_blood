@@ -1582,5 +1582,8 @@ int main()
 	std::thread trd2(thread_reset, &p_lock, &p_reset, ps);
 	trd1.join();
 	trd2.join();
+
+	SolutionLC132 lc132;
+	missing = lc132.minCut("aab");
 	return 0;
 }
