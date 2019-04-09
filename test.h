@@ -3205,3 +3205,35 @@ public:
 		return result[n];
 	}
 };
+
+struct Key {
+	int key;
+};
+struct KeyCmp {
+	bool operator()(const Key& k1, const Key& k2) const{
+		return k1.key < k2.key;
+	}
+};
+struct KeyHash {
+	size_t operator()(const Key& k) const{
+		return std::hash<int>()(k.key);
+	}
+};
+
+struct  Key2 {
+	int key;
+	Key2(int k) : key(k){}
+	bool operator==(const Key2& k) const {
+		return k.key == key;
+	}
+};
+
+namespace std {
+	template<>
+	struct hash<Key2>
+	{
+		size_t operator()(const Key2& k) const {
+			return hash<int>()(k.key);
+		}
+	};
+}

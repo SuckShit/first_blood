@@ -1330,7 +1330,7 @@ int main()
 	vector<int> nums{ 7,8,9,11,12 };
 	int missing = firstMissingPositive(nums);
 
-	nums = {5, 5, 1, 7, 1, 1, 5, 2, 7, 6};
+	nums = { 5, 5, 1, 7, 1, 1, 5, 2, 7, 6 };
 	SolutionLC42 s42;
 	missing = s42.trap(nums);
 
@@ -1339,7 +1339,7 @@ int main()
 	string pattern = "*a*b";
 	bres = s44.isMatch(source, pattern);
 
-	nums = { 5,9,3,2,1,0,2,3,3,1,0,0};
+	nums = { 5,9,3,2,1,0,2,3,3,1,0,0 };
 	//nums = { 3 ,1 ,0, 0 };
 	SolutionLC45 s45;
 	missing = s45.jump(nums);
@@ -1373,11 +1373,11 @@ int main()
 			cout << j << endl;
 		}
 	}
-	
+
 	//char* cp = new char[24];
 	//cp = (char*)((unsigned long)cp & -16L);
 	SolutionLC57 s57;
-	vector<Interval> ints{ {1, 2}, {3, 5}, {6, 7}, {8, 10}, {12, 16}};
+	vector<Interval> ints{ {1, 2}, {3, 5}, {6, 7}, {8, 10}, {12, 16} };
 	Interval oneint{ 4, 8 };
 	vector<Interval> resinterval = s57.insert(ints, oneint);
 
@@ -1509,7 +1509,7 @@ int main()
 	SolutionLC84 lc84;
 	vector<int> height{ 2,1,5,6,2,3 };
 	missing = lc84.largestRectangleArea(height);
-	
+
 	SolutionLC85 lc85;
 	vector<vector<char>> matrix{
 {'0','1','1','0','0','1','0','1','0','1'},
@@ -1585,5 +1585,12 @@ int main()
 
 	SolutionLC132 lc132;
 	missing = lc132.minCut("aab");
+
+	cout << height.size() << endl;
+	height.resize(0);
+	vector<int>().swap(height);
+
+	unordered_map<Key, int, KeyHash, KeyCmp> um1 = { {{11}, 12} , { {12}, 12 }};
+	unordered_map<Key2, int> um2 = { {Key2(13), 13} };
 	return 0;
 }
