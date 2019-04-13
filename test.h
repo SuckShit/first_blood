@@ -3237,3 +3237,35 @@ namespace std {
 		}
 	};
 }
+
+class SolutionLC135 {
+public:
+	int candy(vector<int>& ratings) {
+		int sz = ratings.size();
+		if (sz <= 1)
+		{
+			return sz;
+		}
+		vector<int> candies(sz, 1);
+		for (int i = 1; i < sz - 1; i++)
+		{
+			if (ratings[i] > ratings[i - 1])
+			{
+				candies[i] = candies[i - 1] + 1;
+			}
+		}
+		for (int i = sz - 2; i >= 0; i--)
+		{
+			if (ratings[i] > ratings[i + 1])
+			{
+				candies[i] = std::max<int>(candies[i + 1] + 1, candies[i]);
+			}
+		}
+		int result = 0;
+		for (auto e : candies)
+		{
+			result += e;
+		}
+		return result;
+	}
+};

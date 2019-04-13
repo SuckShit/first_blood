@@ -1592,5 +1592,14 @@ int main()
 
 	unordered_map<Key, int, KeyHash, KeyCmp> um1 = { {{11}, 12} , { {12}, 12 }};
 	unordered_map<Key2, int> um2 = { {Key2(13), 13} };
+
+	unordered_set<int> uo;
+	uo.insert(1);
+	uo.insert(1);
+	cout << uo.size() << endl;
+
+	SolutionLC135 lc135;
+	height = { 1, 4, 4, 4, 3, 2, 1 };
+	missing = lc135.candy(height);
 	return 0;
 }
