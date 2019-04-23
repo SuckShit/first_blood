@@ -3247,7 +3247,7 @@ public:
 			return sz;
 		}
 		vector<int> candies(sz, 1);
-		for (int i = 1; i < sz - 1; i++)
+		for (int i = 1; i <= sz - 1; i++)
 		{
 			if (ratings[i] > ratings[i - 1])
 			{
@@ -3267,5 +3267,43 @@ public:
 			result += e;
 		}
 		return result;
+	}
+};
+
+class SolutionLC140 {
+public:
+	unordered_map<string, vector<string>> m;
+	vector<string> combine(string word, vector<string> res) {
+		for (auto &i : res)
+		{
+			i = i + " " + word;
+		}
+		return res;
+	}
+	vector<string> wordBreak(string s, unordered_set<string>& wordDict) {
+		if (m.count(s))
+		{
+			return m[s];
+		}
+		vector<string> result;
+		if (wordDict.count(s))
+		{
+			result.push_back(s);
+		}
+		for (int i = 1; i < s.size(); i++)
+		{
+			string word = s.substr(i);
+			if (wordDict.count(word))
+			{
+				vector<string> tmp = combine(word, wordBreak(s.substr(0, i), wordDict));
+				result.insert(result.end(), tmp.begin(), tmp.end());
+			}
+		}
+		m[s] = result;
+		return result;
+	}
+	vector<string> wordBreak(string s, vector<string>& wordDict) {
+		unordered_set<string> wd(wordDict.begin(), wordDict.end());
+		return wordBreak(s, wd);
 	}
 };

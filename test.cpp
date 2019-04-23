@@ -1601,5 +1601,9 @@ int main()
 	SolutionLC135 lc135;
 	height = { 1, 4, 4, 4, 3, 2, 1 };
 	missing = lc135.candy(height);
+
+	SolutionLC140 lc140;
+	vector<string> dict = { "a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa" };
+	vector<string> resultwords = lc140.wordBreak("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", dict);
 	return 0;
 }
