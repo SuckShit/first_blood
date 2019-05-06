@@ -1605,5 +1605,51 @@ int main()
 	SolutionLC140 lc140;
 	vector<string> dict = { "a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa" };
 	vector<string> resultwords = lc140.wordBreak("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", dict);
+	
+	char* p1[6] = {"a", "as", "asd"};		//24bytes
+	char(*p2)[5][6];							//4bytes
+	char p3[5][6] = { "asd", "asd", "asd" };	//30bytes
+	p2 = &p3;								
+	const char* p4 = "asd";						//4bytes
+	int i5[5][6];								//120bytes
+	int* p5[6] = { 0 };
+	char* p7 = new char[6];
+	Dclass dc;
+	dc.Bclass::pin();
+	dc.a = 10;
+
+	try
+	{
+		exceptionTF();
+	}
+	catch (const std::exception& e)
+	{
+		cout << e.what() << endl;
+		cout << "end" << endl;
+	}
+
+	Bclass *bc;
+	Dclass *dcp = new Dclass;
+	bc = dcp;
+	if (bc == dcp)
+	{
+		cout << "true" << endl;
+	}
+//	throw std::exception("nani");
+
+	try
+	{
+		CtrlH ch;
+		ctrlh = &ch;
+
+		AClass ac;
+		while (!exit_flag)
+		{
+		}
+	}
+	catch (const exception& e)
+	{
+		cout << e.what() << endl;
+	}
 	return 0;
 }

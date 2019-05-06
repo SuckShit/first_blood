@@ -3307,3 +3307,99 @@ public:
 		return wordBreak(s, wd);
 	}
 };
+
+class Aclass {
+public:
+	int a;
+	virtual void pin() = 0;
+};
+
+class Bclass : virtual public Aclass {
+public:
+	void pin() {
+		cout << "Bclass" << endl;
+	}
+};
+
+class Cclass : virtual public Aclass {
+public:
+	void pin() {
+		cout << "Cclass" << endl;
+	}
+};
+
+class Dclass : public Bclass, public Cclass {
+public:
+	void pin() {
+		cout << "Dclass" << endl;
+	}
+};
+
+class exceptionT {
+public:
+	exceptionT() {
+		cout << "exceptionT constructor: " << endl;
+		//throw std::exception("shit");
+	}
+	~exceptionT() {
+		cout << "exceptionT destructor: " << endl;
+		
+		try
+		{
+			throw std::exception("shit");
+		}
+		catch (const std::exception& e)
+		{
+			cout << e.what() << endl;
+		}
+	}
+};
+
+void exceptionTF()
+{
+	exceptionT et;
+	throw std::invalid_argument("fuck you");
+}
+
+using CB = std::function<void(int sig)>;
+const DWORD SIGCTRLC = CTRL_C_EVENT;
+class CtrlH;
+
+CtrlH* ctrlh = 0;
+CB _cb = 0;
+bool exit_flag = false;
+
+class CtrlH {
+public:
+	void SetCB(CB cb) {
+		_cb = cb;
+	}
+	static BOOL WINAPI SetCon(DWORD sig) {
+		_cb(sig);
+		return true;
+	}
+	CtrlH() {
+		SetConsoleCtrlHandler(SetCon, true);
+	}
+	~CtrlH() {
+		SetConsoleCtrlHandler(SetCon, false);
+	}
+};
+
+class AClass {
+public:
+	AClass() {
+		cout << "constructor of AClass" << endl;
+		ctrlh->SetCB(cbofaclass);
+	}
+	static void cbofaclass(int sig) {
+		if (sig == SIGCTRLC)
+		{
+			cout << "another destructor" << endl;
+			exit_flag = true;
+		}
+	}
+	~AClass() {
+		cout << "destructor of AClass" << endl;
+	}
+};
