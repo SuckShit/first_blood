@@ -1631,10 +1631,21 @@ int main()
 	Bclass *bc;
 	Dclass *dcp = new Dclass;
 	bc = dcp;
+	Cclass *cc = dcp;
+	Dclass dcc;
 	if (bc == dcp)
 	{
 		cout << "true" << endl;
 	}
+	if (cc == dcp)
+	{
+		cout << "true" << endl;
+	}
+	if ((void*)cc == (void*)dcp)
+	{
+		cout << "true" << endl;
+	}
+	printf("address: %x", &Dclass::pin);
 //	throw std::exception("nani");
 
 	try

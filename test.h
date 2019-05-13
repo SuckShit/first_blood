@@ -3311,26 +3311,33 @@ public:
 class Aclass {
 public:
 	int a;
+	Aclass():a(1){}
 	virtual void pin() = 0;
 };
 
 class Bclass : virtual public Aclass {
 public:
-	void pin() {
+	int b;
+	Bclass():Aclass(), b(2){}
+	void pin() override {
 		cout << "Bclass" << endl;
 	}
 };
 
 class Cclass : virtual public Aclass {
 public:
-	void pin() {
+	int c;
+	Cclass():Aclass(), c(3){}
+	void pin() override {
 		cout << "Cclass" << endl;
 	}
 };
 
 class Dclass : public Bclass, public Cclass {
 public:
-	void pin() {
+	int d;
+	Dclass():Bclass(), Cclass(), d(5){}
+	void pin() override {
 		cout << "Dclass" << endl;
 	}
 };
@@ -3401,5 +3408,31 @@ public:
 	}
 	~AClass() {
 		cout << "destructor of AClass" << endl;
+	}
+};
+
+class SolutionLC145 {
+public:
+	vector<int> postorderTraversal(TreeNode* root) {
+		vector<int> result;
+		stack<TreeNode*> stk;
+		TreeNode* p = root;
+		while (!stk.empty() || p != nullptr)
+		{
+			if (p != nullptr)
+			{
+				result.push_back(p->val);
+				stk.push(p);
+				p = p->right;
+			}
+			else
+			{
+				p = stk.top();
+				stk.pop();
+				p = p->left;
+			}
+		}
+		reverse(result.begin(), result.end());
+		return result;
 	}
 };
