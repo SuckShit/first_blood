@@ -3436,3 +3436,9 @@ public:
 		return result;
 	}
 };
+
+union MyUnion
+{
+	int x;
+	char c;
+};

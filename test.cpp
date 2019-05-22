@@ -1,4 +1,7 @@
 #include "test.h"
+#if 1
+#include "a_star_search.h"
+#endif
 //#include "function.h"
 //#define _CRT_SECURE_NO_WARNINGS 1
 //
@@ -1662,5 +1665,24 @@ int main()
 	{
 		cout << e.what() << endl;
 	}
+
+	BaseCs* bcsp = new BaseCs[10]();
+
+	MyUnion mu;
+	mu.x = 1;
+	mu.c = 1;
+
+	if (mu.x)
+	{
+		cout << "x exists" << endl;
+	}
+	if (mu.c)
+	{
+		cout << "c exists" << endl;
+	}
+
+	deque<int> dqi{ 0,1,2,3,4,5,6,7,8,9 };
+	dqi.erase(dqi.begin() + 3);
+	cout << dqi.size() << endl;
 	return 0;
 }
