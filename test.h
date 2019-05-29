@@ -3442,3 +3442,49 @@ union MyUnion
 	int x;
 	char c;
 };
+
+class LRUCache {
+public:
+	LRUCache(int capacity) {
+		_capacity = capacity;
+	}
+
+	int get(int key) {
+		auto it = _lruhash.find(key);
+		if (it == _lruhash.end())
+		{
+			return -1;
+		}
+		updateq(it);
+		return it->second.first;
+	}
+
+	void put(int key, int value) {
+		auto it = _lruhash.find(key);
+		if (it != _lruhash.end())
+		{
+			updateq(it);
+		}
+		else
+		{
+			if (_lruhash.size() == _capacity)
+			{
+				_lruhash.erase(_lruq.back());
+				_lruq.pop_back();
+			}
+			_lruq.push_front(key);
+		}
+		_lruhash[key] = { value, _lruq.begin() };
+	}
+private:
+	int _capacity;
+	std::list<int> _lruq;
+	typedef pair<int, std::list<int>::iterator> _hashval;
+	unordered_map<int, _hashval> _lruhash;
+	void updateq(unordered_map<int, _hashval>::iterator it)
+	{
+		_lruq.erase(it->second.second);
+		_lruq.push_front(it->first);
+		it->second.second = _lruq.begin();
+	}
+};
