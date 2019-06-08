@@ -1688,5 +1688,9 @@ int main()
 	vector<string> vecs;
 	vecs.push_back("asd");
 	vecs.emplace_back("dsa");
+
+	vector<vector<int>> slopes{ {1,1},{2,2},{3,3},{4,4},{5,5} };
+	SolutionLC149 lc149;
+	missing = lc149.maxPoints(slopes);
 	return 0;
 }
