@@ -1692,5 +1692,9 @@ int main()
 	vector<vector<int>> slopes{ {1,1},{2,2},{3,3},{4,4},{5,5} };
 	SolutionLC149 lc149;
 	missing = lc149.maxPoints(slopes);
+
+	slopes = { {-2, -3, 3}, {-5, -10, 1}, {10, 30, -5} };
+	SolutionLC174 lc174;
+	missing = lc174.calculateMinimumHP(slopes);
 	return 0;
 }

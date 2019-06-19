@@ -3538,3 +3538,44 @@ private:
 		else return GCD(b, a%b);
 	}
 };
+template <typename T>
+struct valid_except_void : std::false_type { };
+
+template <>
+struct valid_except_void<void> { };
+
+template <typename... Ts>
+constexpr auto test = std::conjunction_v<valid_except_void<Ts>...>;
+
+constexpr auto inst = test<int, void>;
+
+class SolutionLC174 {
+public:
+	int calculateMinimumHP(vector<vector<int>>& dungeon) {
+		int rows = dungeon.size();
+		int cols = dungeon[0].size();
+		vector<vector<int>> dp(rows, vector<int>(cols, 0));
+		dp[rows - 1][cols - 1] = dungeon[rows - 1][cols - 1] >= 0 ? 1 : 1 - dungeon[rows - 1][cols - 1];
+		dpfun(0, 0, dp, dungeon);
+		return dp[0][0];
+	}
+	int dpfun(int i, int j, vector<vector<int>>& dp, const vector<vector<int>>& dungeon)
+	{
+		if (i >= dp.size() || j >= dp[0].size())
+		{
+			return INT_MAX;
+		}
+		else if (i < dp.size() && j < dp[0].size() && dp[i][j] != 0)
+		{
+			return dp[i][j];
+		}
+		else
+		{
+			int left = dpfun(i + 1, j, dp, dungeon);
+			int right = dpfun(i, j + 1, dp, dungeon);
+			int min = std::min<int>(left, right) - dungeon[i][j];
+			dp[i][j] = min <= 0 ? 1 : min + 0;
+			return dp[i][j];
+		}
+	}
+};
