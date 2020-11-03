@@ -1696,5 +1696,6 @@ int main()
 	slopes = { {-2, -3, 3}, {-5, -10, 1}, {10, 30, -5} };
 	SolutionLC174 lc174;
 	missing = lc174.calculateMinimumHP(slopes);
+	shared_ptr<AClass> spa(new AClass);
 	return 0;
 }
