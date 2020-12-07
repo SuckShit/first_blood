@@ -1086,7 +1086,7 @@ int main()
 	//x = intvec.capacity();
 	//vector<int>().swap(intvec);
 	//x = intvec.capacity();
-	vector<BaseCs*>* intpvec = new vector<BaseCs *>;
+	vector<BaseCs*>* intpvec = new vector<BaseCs*>;
 	BaseCs* bcs = new BaseCs;
 	delete bcs;
 	intpvec->push_back(new BaseCs);
@@ -1127,13 +1127,14 @@ int main()
 	//pbcs1->f1();
 	using pfun = void(*)();
 	cout << "vbf of BaseCs:" << endl;
-	cout << pbcs1 << ":" << *(int*)pbcs1 << endl;
-	pfun pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 1));
+	cout << pbcs1 << ":" << *(long long int*)pbcs1 << endl;
+	pfun pfunimp = (pfun)(*((long long int*)(*(long long int*)pbcs1) + 1));
 	pfunimp();
-	pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 2));
+	pfunimp = (pfun)(*((long long int*)(*(long long int*)pbcs1) + 2));
 	pfunimp();
-	pfunimp = (pfun)(*((int*)(*(int*)pbcs1) + 3));
+	pfunimp = (pfun)(*((long long int*)(*(long long int*)pbcs1) + 3));
 	pfunimp();
+	std::cout << sizeof(void*) << std::endl;
 	D d1;
 	d1._a = 1;
 	d1._b = 2;
@@ -1155,7 +1156,7 @@ int main()
 	td1.join();
 	td2.join();
 
-	int** arr = new int*[20];
+	int** arr = new int* [20];
 	for (int i = 0; i < 20; i++)
 	{
 		arr[i] = new int[10];
@@ -1213,8 +1214,8 @@ int main()
 	is_arithmetic_fun<Foo>();
 
 	//基类指针转为派生类指针,且该基类指针指向基类对象。
-	ANIMAL * ani1 = new ANIMAL;
-	DOG * dog1 = dynamic_cast<DOG*>(ani1);
+	ANIMAL* ani1 = new ANIMAL;
+	DOG* dog1 = dynamic_cast<DOG*>(ani1);
 	if (dog1)
 	{
 		dog1->OutPutname();
@@ -1229,12 +1230,12 @@ int main()
 		cout << e.what() << endl;
 	}
 
-	DOG * dog111 = static_cast<DOG*>(ani1);
+	DOG* dog111 = static_cast<DOG*>(ani1);
 	dog111->OutPutname();
 	//dog111->OutPuttype();//错误，在ANIMAL类型指针不能调用方法OutPutType（）；在运行时出现错误。
 
 	//基类指针转为派生类指针，且该基类指针指向派生类对象
-	ANIMAL * ani3 = new DOG;
+	ANIMAL* ani3 = new DOG;
 	DOG* dog3 = static_cast<DOG*>(ani3);
 	dog3->OutPutname(); //正确
 	dog3->OutPuttype();
@@ -1244,8 +1245,8 @@ int main()
 	dog33->OutPuttype();
 
 	//派生类指针转为基类指针，且该派生类指针指向派生类对象
-	DOG *dog2 = new DOG;
-	ANIMAL *ani2 = static_cast<DOG*>(dog2);
+	DOG* dog2 = new DOG;
+	ANIMAL* ani2 = static_cast<DOG*>(dog2);
 	ani2->OutPutname(); //正确，结果输出为大黄
 	//ani2->OutPuttype();
 
@@ -1253,7 +1254,7 @@ int main()
 	//DOG * dog22 = new ANIMAL;
 
 
-	MostDerived * mostDerived = new MostDerived();
+	MostDerived* mostDerived = new MostDerived();
 	mostDerived->_d = 5;
 	mostDerived->_c = 4;
 	mostDerived->_b = 3;
@@ -1261,11 +1262,11 @@ int main()
 	mostDerived->Right::_a = 1;
 	// implicit upcast through the diamond results in a compile-time error, ambiguous:
 	// BaseClass * baseClass = mostDerived;
-	Left * left = mostDerived;
-	BaseClass * baseClassThroughLeft = left; // or, equivalently:
+	Left* left = mostDerived;
+	BaseClass* baseClassThroughLeft = left; // or, equivalently:
 	// BaseClass * baseClassThroughLeft = reinterpret_cast<Left*>(mostDerived);
-	Right * right = mostDerived;
-	BaseClass * baseClassThroughRight = right;
+	Right* right = mostDerived;
+	BaseClass* baseClassThroughRight = right;
 
 	// this is of course ambiguous and does not compile
 	//std::cout << mostDerived->behave() << std::endl;
@@ -1279,19 +1280,19 @@ int main()
 
 	std::cout << "Cast Left BaseClass * expression to Right *:" << std::endl;
 	std::cout << "with static_cast, behaves as "
-		<< static_cast<Right *>(baseClassThroughLeft)->behave()
-		<< " at addr: " << static_cast<Right *>(baseClassThroughLeft) << std::endl;
+		<< static_cast<Right*>(baseClassThroughLeft)->behave()
+		<< " at addr: " << static_cast<Right*>(baseClassThroughLeft) << std::endl;
 	std::cout << "with dynamic_cast, behaves as "
-		<< dynamic_cast<Right *>(baseClassThroughLeft)->behave()
-		<< " at addr: " << dynamic_cast<Right *>(baseClassThroughLeft) << std::endl;//sidecast
+		<< dynamic_cast<Right*>(baseClassThroughLeft)->behave()
+		<< " at addr: " << dynamic_cast<Right*>(baseClassThroughLeft) << std::endl;//sidecast
 
 	std::cout << "Cast Right BaseClass * expression to Left *:" << std::endl;
 	std::cout << "with static_cast, behaves as "
-		<< static_cast<Left *>(baseClassThroughRight)->behave()
-		<< " at addr: " << static_cast<Left *>(baseClassThroughRight) << std::endl;
+		<< static_cast<Left*>(baseClassThroughRight)->behave()
+		<< " at addr: " << static_cast<Left*>(baseClassThroughRight) << std::endl;
 	std::cout << "with dynamic_cast, behaves as "
-		<< dynamic_cast<Left *>(baseClassThroughRight)->behave()
-		<< " at addr: " << dynamic_cast<Left *>(baseClassThroughRight) << std::endl;//sidecast
+		<< dynamic_cast<Left*>(baseClassThroughRight)->behave()
+		<< " at addr: " << dynamic_cast<Left*>(baseClassThroughRight) << std::endl;//sidecast
 
 	delete mostDerived;
 
@@ -1445,7 +1446,7 @@ int main()
 	for (int i = 0; i < 10; ++i)
 	{
 
-		PER_HANDLE_DATA * PerHandleData = NULL;
+		PER_HANDLE_DATA* PerHandleData = NULL;
 		SOCKET acceptSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
 		if (INVALID_SOCKET == acceptSocket)
 		{
@@ -1593,7 +1594,7 @@ int main()
 	height.resize(0);
 	vector<int>().swap(height);
 
-	unordered_map<Key, int, KeyHash, KeyCmp> um1 = { {{11}, 12} , { {12}, 12 }};
+	unordered_map<Key, int, KeyHash, KeyCmp> um1 = { {{11}, 12} , { {12}, 12 } };
 	unordered_map<Key2, int> um2 = { {Key2(13), 13} };
 
 	unordered_set<int> uo;
@@ -1608,11 +1609,11 @@ int main()
 	SolutionLC140 lc140;
 	vector<string> dict = { "a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa" };
 	vector<string> resultwords = lc140.wordBreak("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", dict);
-	
-	char* p1[6] = {"a", "as", "asd"};		//24bytes
+
+	char* p1[6] = { "a", "as", "asd" };		//24bytes
 	char(*p2)[5][6];							//4bytes
 	char p3[5][6] = { "asd", "asd", "asd" };	//30bytes
-	p2 = &p3;								
+	p2 = &p3;
 	const char* p4 = "asd";						//4bytes
 	int i5[5][6];								//120bytes
 	int* p5[6] = { 0 };
@@ -1631,10 +1632,10 @@ int main()
 		cout << "end" << endl;
 	}
 
-	Bclass *bc;
-	Dclass *dcp = new Dclass;
+	Bclass* bc;
+	Dclass* dcp = new Dclass;
 	bc = dcp;
-	Cclass *cc = dcp;
+	Cclass* cc = dcp;
 	Dclass dcc;
 	if (bc == dcp)
 	{
@@ -1649,22 +1650,22 @@ int main()
 		cout << "true" << endl;
 	}
 	printf("address: %x", &Dclass::pin);
-//	throw std::exception("nani");
+	//	throw std::exception("nani");
 
-	try
-	{
-		CtrlH ch;
-		ctrlh = &ch;
+	//try
+	//{
+	//	CtrlH ch;
+	//	ctrlh = &ch;
 
-		AClass ac;
-		while (!exit_flag)
-		{
-		}
-	}
-	catch (const exception& e)
-	{
-		cout << e.what() << endl;
-	}
+	//	AClass ac;
+	//	while (!exit_flag)
+	//	{
+	//	}
+	//}
+	//catch (const exception& e)
+	//{
+	//	cout << e.what() << endl;
+	//}
 
 	BaseCs* bcsp = new BaseCs[10]();
 
@@ -1697,5 +1698,10 @@ int main()
 	SolutionLC174 lc174;
 	missing = lc174.calculateMinimumHP(slopes);
 	shared_ptr<AClass> spa(new AClass);
+
+	std::vector<std::vector<int>> r218{ {0, 2, 3},{2, 5, 3 }};
+	SolutionLC218 lc218;
+	lc218.getSkyline(r218);
+
 	return 0;
 }

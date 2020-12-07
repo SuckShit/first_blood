@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <stack>
+#include <set>
 #include <queue>
 #include <string>
 #include <thread>
@@ -111,7 +112,7 @@ public:
 		}
 		else
 		{
-			m_data = new char[int(const_cast<BaseCs*>(&bc)) + 1];
+			m_data = new char[int(*(const_cast<BaseCs*>(&bc))) + 1];
 			strcpy(m_data, bc.m_data);
 		}
 		cout << "Base copy construction" << endl; 
@@ -125,7 +126,7 @@ public:
 		}
 		if (this != &bc)
 		{
-			m_data = new char[int(const_cast<BaseCs*>(&bc)) + 1];
+			m_data = new char[int(*(const_cast<BaseCs*>(&bc))) + 1];
 			strcpy(m_data, bc.m_data);
 		}
 		cout << "Base operator= overload" << endl; 
@@ -3579,3 +3580,110 @@ public:
 		}
 	}
 };
+
+class SolutionLC218 {
+public:
+	std::vector<std::vector<int>> getSkyline(std::vector<std::vector<int>>& buildings) {
+		std::multiset<Point> mp;
+		std::vector<std::vector<int>> r;
+		std::multiset<int> pq{0};
+		int max = 0;
+		for (const auto& v : buildings) {
+			Point ps, pe;
+			ps.start = true;
+			ps.xpos = v[0];
+			ps.ypos = v[2];
+			pe.start = false;
+			pe.xpos = v[1];
+			pe.ypos = v[2];
+			mp.insert(ps);
+			mp.insert(pe);
+		}
+		for (const auto& v : mp) {
+			if (v.start) pq.insert(v.ypos);
+			else pq.erase(pq.find(v.ypos));
+			if (*pq.rbegin() != max) {
+				max = *pq.rbegin();
+				int x = v.xpos;
+				int y = *pq.rbegin();
+				std::vector<int> tmp;
+				tmp.push_back(x);
+				tmp.push_back(y);
+				r.push_back(tmp);
+			}
+		}
+		return r;
+	}
+private:
+	struct Point {
+		bool start;
+		int xpos;
+		int ypos;
+		bool operator<(const Point& p) const {
+			if (start && p.start) {
+				return xpos < p.xpos || xpos == p.xpos && ypos > p.ypos;
+			}
+			else {
+				return xpos < p.xpos || xpos == p.xpos && ypos < p.ypos || start && !p.start && xpos == p.xpos && ypos == p.ypos;
+			}
+		}
+	};
+	Point p;
+};
+
+void PreTraverse(TreeNode* r) {
+	std::stack<TreeNode*> s;
+	TreeNode* t = r;
+	while (!t || !s.empty()) {
+		while (!t) {
+			//visit t->val
+			s.push(t);
+			t = t->left;
+		}
+		if (!s.empty()) {
+			t = s.top();
+			t = t->right;
+			s.pop();
+		}
+	}
+}
+
+void InTraverse(TreeNode* r) {
+	std::stack<TreeNode*> s;
+	TreeNode* t = r;
+	while (!t || !s.empty()) {
+		while (!t) {
+			s.push(t);
+			t = t->left;
+		}
+		if (!s.empty()) {
+			//visit t->val
+			t = s.top();
+			t = t->right;
+			s.pop();
+		}
+	}
+}
+
+void PostTraverse(TreeNode* r) {
+	std::stack<TreeNode*> s;
+	TreeNode* tmp, *t = r;
+	while (!t || !s.empty()) {
+		if (!t) {
+			s.push(t);
+			t = t->left;
+		}
+		else {
+			t = s.top();
+			if (!t->right && tmp != t->right) {
+				t = t->right;
+			}
+			else {
+				//visit t->val
+				s.pop();
+				tmp = t;
+				t = nullptr;
+			}
+		}
+	}
+}
